@@ -1,0 +1,35 @@
+{
+  "name": "restructure",
+  "version": "0.1.0",
+  "description": "Declaratively encode and decode binary data",
+  "main": "index.js",
+  "dependencies": {
+    "text-encoding": "git://github.com/inexorabletash/text-encoding.git"
+  },
+  "devDependencies": {
+    "coffee-script": "~1.7.1",
+    "mocha": "~1.18.2",
+    "chai": "~1.9.1",
+    "concat-stream": "~1.4.5",
+    "coffee-coverage": "~0.4.2"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/devongovett/struct.git"
+  },
+  "keywords": [
+    "binary",
+    "struct",
+    "encode",
+    "decode"
+  ],
+  "author": "Devon Govett <devongovett@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/devongovett/struct/issues"
+  },
+  "homepage": "https://github.com/devongovett/struct"
+}
