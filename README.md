@@ -233,6 +233,9 @@ var Person = new r.Struct({
 });
 ```
 
+If the type of a pointer is set to 'void', it is not decoded and the computed address in the buffer
+is simply returned. To encode a void pointer, create a `new r.VoidPointer(type, value)`.
+
 ## License
 
 MIT
