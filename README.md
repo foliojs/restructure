@@ -93,7 +93,7 @@ as defined in an array.
 
 ```javascript
 var bitfield = new Bitfield(r.uint8, ['Jack', 'Kack', 'Lack', 'Mack', 'Nack', 'Oack', 'Pack', 'Quack']);
-bitfield.decode(stream)
+bitfield.decode(stream);
 
 var result = {
   Jack: true,
@@ -155,18 +155,18 @@ before the string, or computed by a function.
 
 ```javascript
 // fixed length, containing numbers
-var str = new r.Array(r.uint16, 2);
+var arr = new r.Array(r.uint16, 2);
 
 // length encoded as number before the array containing strings
-var str = new r.Array(new r.String(10), r.uint8);
+var arr = new r.Array(new r.String(10), r.uint8);
 
 // length computed by a function
-var str = new r.Array(r.uint8, function() { return 5 });
+var arr = new r.Array(r.uint8, function() { return 5 });
 
 // length from parent structure
 var struct = new r.Struct({
   len: r.uint8,
-  str: new r.Array(r.uint8, 'len')
+  arr: new r.Array(r.uint8, 'len')
 });
 ```
 
