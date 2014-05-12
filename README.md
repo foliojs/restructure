@@ -26,7 +26,7 @@ var Person = new r.Struct({
 
 // decode a person from a buffer
 var stream = new r.DecodeStream(buffer);
-Person.parse(stream); // returns an object with the defined fields, above
+Person.parse(stream); // returns an object with the fields defined above
 
 // encode a person from an object
 // pipe the stream to a destination, such as a file
@@ -95,7 +95,7 @@ The `Bitfield` type maps a number to an object with boolean keys mapping to each
 as defined in an array.
 
 ```javascript
-var bitfield = new Bitfield(r.uint8, ['Jack', 'Kack', 'Lack', 'Mack', 'Nack', 'Oack', 'Pack', 'Quack']);
+var bitfield = new r.Bitfield(r.uint8, ['Jack', 'Kack', 'Lack', 'Mack', 'Nack', 'Oack', 'Pack', 'Quack']);
 bitfield.decode(stream);
 
 var result = {

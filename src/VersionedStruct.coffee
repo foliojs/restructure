@@ -65,7 +65,7 @@ class VersionedStruct extends Struct
       val: val
       pointerSize: 0
       
-    ctx.pointerOffset = stream.pos + @size(val, ctx, false) # lazyload?
+    ctx.pointerOffset = stream.pos + @size(val, ctx, false)
     
     if typeof @type isnt 'string'
       @type.encode(stream, val.version)
