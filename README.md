@@ -206,7 +206,6 @@ var Person = new r.VersionedStruct(r.uint8, {
     hairColor: r.Enum(r.uint8, ['black', 'brown', 'blonde'])
   }
 });
-
 ```
 
 ### Pointer
@@ -232,7 +231,7 @@ var Person = new r.Struct({
   name: r.String(r.uint8, 'utf8'),
   age: r.uint8,
   ptrStart: r.uint8,
-  address: new r.Pointer(r.uint8, Address, { type: 'local', relativeTo: 'ptrStart' })
+  address: new r.Pointer(r.uint8, Address)
 });
 ```
 
