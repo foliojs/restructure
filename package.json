@@ -11,10 +11,12 @@
     "mocha": "~1.18.2",
     "chai": "~1.9.1",
     "concat-stream": "~1.4.5",
-    "coffee-coverage": "~0.4.2"
+    "coffee-coverage": "~0.4.2",
+    "coveralls": "^2.10.0",
+    "mocha-lcov-reporter": "0.0.1"
   },
   "scripts": {
-    "test": "mocha"
+    "test": "make test"
   },
   "repository": {
     "type": "git",
