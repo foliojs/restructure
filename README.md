@@ -1,6 +1,7 @@
 # Restructure
 
 [![Build Status](https://travis-ci.org/devongovett/restructure.svg?branch=master)](https://travis-ci.org/devongovett/restructure)
+[![Coverage Status](https://img.shields.io/coveralls/devongovett/restructure.svg)](https://coveralls.io/r/devongovett/restructure)
 
 Restructure allows you to declaratively encode and decode binary data.
 It supports a wide variety of types to enable you to express a multitude
