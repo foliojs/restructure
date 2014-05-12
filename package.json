@@ -16,7 +16,9 @@
     "mocha-lcov-reporter": "0.0.1"
   },
   "scripts": {
-    "test": "make test"
+    "test": "make test",
+    "prepublish": "make js",
+    "postpublish": "make clean"
   },
   "repository": {
     "type": "git",
