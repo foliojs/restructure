@@ -26,7 +26,7 @@ var Person = new r.Struct({
 
 // decode a person from a buffer
 var stream = new r.DecodeStream(buffer);
-Person.parse(stream); // returns an object with the fields defined above
+Person.decode(stream); // returns an object with the fields defined above
 
 // encode a person from an object
 // pipe the stream to a destination, such as a file
