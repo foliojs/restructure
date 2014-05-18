@@ -6,10 +6,14 @@ class Pointer
   decode: (stream, parent) ->
     offset = @offsetType.decode(stream)
     pos = stream.pos
+    
+    # handle NULL pointers
+    if offset is 0
+      return null
       
     relative = switch @options.type
       when 'local'     then parent._startOffset
-      when 'immediate' then stream.pos
+      when 'immediate' then stream.pos - @offsetType.size()
       when 'parent'    then parent.parent._startOffset
       else 0
     
@@ -17,11 +21,7 @@ class Pointer
       relative += parent.parent[@options.relativeTo]
       
     ptr = offset + relative
-    
-    # handle NULL pointers
-    if ptr is 0
-      return null
-      
+          
     if @type?
       stream.pos = ptr
       res = @type.decode(stream, parent)

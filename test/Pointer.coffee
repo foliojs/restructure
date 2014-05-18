@@ -7,7 +7,7 @@ describe 'Pointer', ->
     it 'should handle null pointers', ->
       stream = new DecodeStream new Buffer [0]
       pointer = new Pointer uint8, uint8
-      should.not.exist pointer.decode(stream, _startOffset: 0)
+      should.not.exist pointer.decode(stream, _startOffset: 50)
       
     it 'should use local offsets from start of parent by default', ->
       stream = new DecodeStream new Buffer [1, 53]
@@ -15,14 +15,15 @@ describe 'Pointer', ->
       pointer.decode(stream, _startOffset: 0).should.equal 53
       
     it 'should support immediate offsets', ->
-      stream = new DecodeStream new Buffer [0, 53]
+      stream = new DecodeStream new Buffer [1, 53]
       pointer = new Pointer uint8, uint8, type: 'immediate'
       pointer.decode(stream).should.equal 53
       
     it 'should support offsets relative to the parent', ->
-      stream = new DecodeStream new Buffer [1, 53]
+      stream = new DecodeStream new Buffer [0, 0, 1, 53]
+      stream.pos = 2
       pointer = new Pointer uint8, uint8, type: 'parent'
-      pointer.decode(stream, parent: _startOffset: 0).should.equal 53
+      pointer.decode(stream, parent: _startOffset: 2).should.equal 53
       
     it 'should support global offsets', ->
       stream = new DecodeStream new Buffer [4, 0, 0, 0, 53]
@@ -30,7 +31,7 @@ describe 'Pointer', ->
       pointer.decode(stream).should.equal 53
     
     it 'should support offsets relative to a property on the parent', ->
-      stream = new DecodeStream new Buffer [0, 0, 0, 0, 53]
+      stream = new DecodeStream new Buffer [1, 0, 0, 0, 0, 53]
       pointer = new Pointer uint8, uint8, relativeTo: 'ptr'
       pointer.decode(stream, _startOffset: 0, parent: ptr: 4).should.equal 53
       
