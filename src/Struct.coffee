@@ -27,7 +27,7 @@ class Struct
       else
         val = type.decode(stream, res)
         
-      res[key] = val if val?
+      res[key] = val unless val is undefined
       res._currentOffset = stream.pos - res._startOffset
       
     return

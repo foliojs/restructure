@@ -2,7 +2,7 @@ class Reserved
   constructor: (@type, @count = 1) ->    
   decode: (stream) ->
     stream.pos += @size()
-    return null
+    return undefined
     
   size: ->
     @type.size() * @count
