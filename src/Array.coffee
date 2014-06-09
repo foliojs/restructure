@@ -64,7 +64,9 @@ class ArrayT
       @type.encode(stream, item, ctx)
       
     if @length instanceof NumberT
-      for ptr in ctx.pointers
+      i = 0
+      while i < ctx.pointers.length
+        ptr = ctx.pointers[i++]
         ptr.type.encode(stream, ptr.val)
       
     return

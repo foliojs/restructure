@@ -62,7 +62,9 @@ class Struct
     for key, type of @fields when type.encode?
       type.encode(stream, val[key], ctx)
       
-    for ptr in ctx.pointers
+    i = 0
+    while i < ctx.pointers.length
+      ptr = ctx.pointers[i++]
       ptr.type.encode(stream, ptr.val, ptr.parent)
       
     return
