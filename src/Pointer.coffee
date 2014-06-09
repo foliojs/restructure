@@ -3,7 +3,7 @@ class Pointer
     @type = null if @type is 'void'
     @options.type ?= 'local'
     
-  decode: (stream, parent) ->
+  decode: (stream, ctx) ->
     offset = @offsetType.decode(stream)
     pos = stream.pos
     
@@ -12,19 +12,23 @@ class Pointer
       return null
       
     relative = switch @options.type
-      when 'local'     then parent._startOffset
+      when 'local'     then ctx._startOffset
       when 'immediate' then stream.pos - @offsetType.size()
-      when 'parent'    then parent.parent._startOffset
-      else 0
+      when 'parent'    then ctx.parent._startOffset
+      else
+        while ctx.parent
+          ctx = ctx.parent
+          
+        ctx._startOffset
     
     if @options.relativeTo
-      relative += parent.parent[@options.relativeTo]
+      relative += ctx.parent[@options.relativeTo]
       
     ptr = offset + relative
-          
+    
     if @type?
       stream.pos = ptr
-      res = @type.decode(stream, parent)
+      res = @type.decode(stream, ctx)
       stream.pos = pos
       return res
     else

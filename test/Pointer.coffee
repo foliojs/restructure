@@ -26,9 +26,10 @@ describe 'Pointer', ->
       pointer.decode(stream, parent: _startOffset: 2).should.equal 53
       
     it 'should support global offsets', ->
-      stream = new DecodeStream new Buffer [4, 0, 0, 0, 53]
+      stream = new DecodeStream new Buffer [1, 2, 4, 0, 0, 0, 53]
       pointer = new Pointer uint8, uint8, type: 'global'
-      pointer.decode(stream).should.equal 53
+      stream.pos = 2
+      pointer.decode(stream, parent: parent: _startOffset: 2).should.equal 53
     
     it 'should support offsets relative to a property on the parent', ->
       stream = new DecodeStream new Buffer [1, 0, 0, 0, 0, 53]
