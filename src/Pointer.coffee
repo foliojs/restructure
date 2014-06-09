@@ -16,10 +16,11 @@ class Pointer
       when 'immediate' then stream.pos - @offsetType.size()
       when 'parent'    then ctx.parent._startOffset
       else
-        while ctx.parent
-          ctx = ctx.parent
+        c = ctx
+        while c.parent
+          c= c.parent
           
-        ctx._startOffset
+        c._startOffset
     
     if @options.relativeTo
       relative += ctx.parent[@options.relativeTo]
