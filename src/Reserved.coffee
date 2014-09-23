@@ -1,13 +1,16 @@
+utils = require './utils'
+
 class Reserved
   constructor: (@type, @count = 1) ->    
-  decode: (stream) ->
-    stream.pos += @size()
+  decode: (stream, parent) ->
+    stream.pos += @size(null, parent)
     return undefined
     
-  size: ->
-    @type.size() * @count
+  size: (data, parent) ->
+    count = utils.resolveLength @count, null, parent
+    @type.size() * count
     
-  encode: (stream) ->
-    stream.fill 0, @size()
+  encode: (stream, val, parent) ->
+    stream.fill 0, @size(val, parent)
     
 module.exports = Reserved
