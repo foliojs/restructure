@@ -1,16 +1,11 @@
 {Number:NumberT} = require './Number'
+utils = require './utils'
 
 class StringT
   constructor: (@length, @encoding = 'ascii') ->
     
   decode: (stream, parent) ->
-    length = @length
-    if parent and typeof length is 'string'
-      length = parent[length]
-      
-    if length instanceof NumberT
-      length = length.decode(stream)
-      
+    length = utils.resolveLength @length, stream, parent
     encoding = @encoding
     if typeof encoding is 'function'
       encoding = encoding.call(parent) or 'ascii'

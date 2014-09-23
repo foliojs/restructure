@@ -1,10 +1,9 @@
+utils = require './utils'
+
 class BufferT
   constructor: (@length) ->
   decode: (stream, parent) ->
-    length = @length
-    if parent and typeof length is 'string'
-      length = parent[length]
-      
+    length = utils.resolveLength @length, stream, parent
     return stream.readBuffer(length)
     
   size: (val) ->

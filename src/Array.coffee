@@ -1,24 +1,17 @@
 {Number:NumberT} = require './Number'
+utils = require './utils'
 
 class ArrayT
   constructor: (@type, @length) ->
     
   decode: (stream, parent) ->
     pos = stream.pos
-    length = @length
     
     res = []
     ctx = parent
+    length = utils.resolveLength @length, stream, parent
     
-    if typeof length is 'function'
-      length = length.call(parent)
-    
-    if parent and typeof length is 'string'
-      length = parent[length]
-      
-    if length instanceof NumberT
-      length = length.decode(stream)
-      
+    if @length instanceof NumberT      
       # define hidden properties    
       Object.defineProperties res,
         parent:         { value: parent }
