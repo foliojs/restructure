@@ -1,6 +1,6 @@
 stream = require 'stream'
 DecodeStream = require './DecodeStream'
-{TextEncoder} = require 'text-encoding'
+iconv = require 'iconv-lite'
 
 class EncodeStream extends stream.Readable
   constructor: ->
@@ -39,8 +39,7 @@ class EncodeStream extends stream.Readable
         @writeBuffer buf
         
       else
-        encoder = new TextEncoder encoding, NONSTANDARD_allowLegacyEncoding: true
-        @writeBuffer new Buffer(encoder.encode(string))
+        @writeBuffer iconv.encode(string, encoding)
     
   writeUInt24BE: (val) ->
     buf = new Buffer(3)

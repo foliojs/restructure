@@ -4,7 +4,7 @@
   "description": "Declaratively encode and decode binary data",
   "main": "index.js",
   "dependencies": {
-    "text-encoding": "git://github.com/inexorabletash/text-encoding.git"
+    "iconv-lite": "^0.4.5"
   },
   "devDependencies": {
     "coffee-script": "~1.7.1",

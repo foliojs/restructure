@@ -1,4 +1,4 @@
-{TextDecoder} = require 'text-encoding'
+iconv = require 'iconv-lite'
 
 class DecodeStream
   constructor: (@buffer) ->
@@ -43,8 +43,7 @@ class DecodeStream
         
       else
         buf = @readBuffer length
-        decoder = new TextDecoder encoding
-        return decoder.decode(new Uint8Array(buf))
+        return iconv.decode(buf, encoding)
     
   readBuffer: (length) ->
     return @buffer.slice(@pos, @pos += length)
