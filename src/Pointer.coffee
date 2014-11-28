@@ -37,6 +37,9 @@ class Pointer
       return ptr
       
   size: (val, ctx) ->
+    unless val?
+      return @offsetType.size()
+    
     parent = ctx
     switch @options.type
       when 'local', 'immediate'

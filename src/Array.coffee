@@ -32,6 +32,9 @@ class ArrayT
     return res
     
   size: (array, ctx) ->
+    unless array
+      return @type.size(null, ctx) * utils.resolveLength(@length, null, ctx)
+    
     size = 0
     if @length instanceof NumberT
       size += @length.size()

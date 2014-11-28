@@ -32,7 +32,7 @@ class Struct
       
     return
     
-  size: (val, parent, includePointers = true) ->
+  size: (val = {}, parent, includePointers = true) ->
     ctx = 
       parent: parent
       val: val
