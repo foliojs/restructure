@@ -2,13 +2,14 @@ class Pointer
   constructor: (@offsetType, @type, @options = {}) ->
     @type = null if @type is 'void'
     @options.type ?= 'local'
+    @options.allowNull ?= true
     
   decode: (stream, ctx) ->
     offset = @offsetType.decode(stream)
     pos = stream.pos
     
     # handle NULL pointers
-    if offset is 0
+    if offset is 0 and @options.allowNull
       return null
       
     relative = switch @options.type
