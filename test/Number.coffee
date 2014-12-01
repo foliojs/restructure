@@ -1,4 +1,4 @@
-{uint8, uint16, uint24, uint32, int8, int16, int24, int32, float, double, DecodeStream, EncodeStream} = require '../'
+{uint8, uint16, uint24, uint32, int8, int16, int24, int32, float, double, fixed32, fixed16, DecodeStream, EncodeStream} = require '../'
 should = require('chai').should()
 concat = require 'concat-stream'
 
@@ -175,4 +175,38 @@ describe 'Number', ->
         done()
         
       double.encode(stream, 1234.56)
+      stream.end()
+      
+  describe 'fixed16', ->
+    it 'should decode', ->
+      stream = new DecodeStream new Buffer [0x19, 0x57]
+      fixed16.decode(stream).should.be.closeTo 25.34, 0.005
+
+    it 'should have a size', ->
+      fixed16.size().should.equal 2
+
+    it 'should encode', (done) ->
+      stream = new EncodeStream
+      stream.pipe concat (buf) ->
+        buf.should.deep.equal new Buffer [0x19, 0x57]
+        done()
+        
+      fixed16.encode(stream, 25.34)
+      stream.end()
+      
+  describe 'fixed32', ->
+    it 'should decode', ->
+      stream = new DecodeStream new Buffer [0x00, 0xfa, 0x8c, 0xcc]
+      fixed32.decode(stream).should.be.closeTo 250.55, 0.005
+
+    it 'should have a size', ->
+      fixed32.size().should.equal 4
+
+    it 'should encode', (done) ->
+      stream = new EncodeStream
+      stream.pipe concat (buf) ->
+        buf.should.deep.equal new Buffer [0x00, 0xfa, 0x8c, 0xcc]
+        done()
+        
+      fixed32.encode(stream, 250.55)
       stream.end()

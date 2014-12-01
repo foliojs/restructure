@@ -26,3 +26,18 @@ exports.int24 = new NumberT('Int24')
 exports.int32 = new NumberT('Int32')
 exports.float = new NumberT('Float')
 exports.double = new NumberT('Double')
+
+class Fixed extends NumberT
+  constructor: (size, endian) ->
+    super "Int#{size}", endian
+    @_point = 1 << (size >> 1)
+    
+  decode: (stream) ->
+    return super(stream) / @_point
+    
+  encode: (stream, val) ->
+    super stream, val * @_point | 0
+    
+exports.Fixed = Fixed
+exports.fixed16 = new Fixed 16
+exports.fixed32 = new Fixed 32

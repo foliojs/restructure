@@ -60,7 +60,7 @@ and whatnot.
 The following builtin number types are available by default:
 
 ```javascript
-uint8, uint16, uint24, uint32, int8, int16, int24, int32, float, double
+uint8, uint16, uint24, uint32, int8, int16, int24, int32, float, double, fixed16, fixed32
 ```
 
 Numbers are big endian (network order) by default. You can create your own number types, however.
