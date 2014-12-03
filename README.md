@@ -7,7 +7,7 @@ Restructure allows you to declaratively encode and decode binary data.
 It supports a wide variety of types to enable you to express a multitude
 of binary formats without writing any parsing code.
 
-Some of the supported features are C-like structures, versioned structures, 
+Some of the supported features are C-like structures, versioned structures,
 pointers, arrays of any type, strings of a large number of encodings, enums,
 bitfields, and more.  See the documentation below for more details.
 
@@ -130,10 +130,10 @@ var struct = new r.Struct({
 
 ### String
 
-A `String` maps a JavaScript string to and from binary encodings.  The length can be a constant, taken 
+A `String` maps a JavaScript string to and from binary encodings.  The length can be a constant, taken
 from a previous field in the parent structure, or encoded using a number type immediately before the string.
 
-Supported encodings include `'ascii'`, `'utf8'`, `'ucs2'`, `'utf16le'`, `'utf16be'`, and also any 
+Supported encodings include `'ascii'`, `'utf8'`, `'ucs2'`, `'utf16le'`, `'utf16be'`, and also any
 encoding specified by the W3C [TextEncoding](http://encoding.spec.whatwg.org/#names-and-labels) standard.
 
 ```javascript
@@ -152,8 +152,8 @@ var struct = new r.Struct({
 
 ### Array
 
-An `Array` maps to and from a JavaScript array containing instances of a sub-type. The length can be a constant, 
-taken from a previous field in the parent structure, encoded using a number type immediately 
+An `Array` maps to and from a JavaScript array containing instances of a sub-type. The length can be a constant,
+taken from a previous field in the parent structure, encoded using a number type immediately
 before the string, or computed by a function.
 
 ```javascript

@@ -11,6 +11,6 @@ exports.VersionedStruct = require './src/VersionedStruct'
 
 for key, val of require './src/Number'
   exports[key] = val
-  
+
 for key, val of require './src/Pointer'
   exports[key] = val

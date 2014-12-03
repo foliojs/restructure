@@ -12,20 +12,20 @@ describe 'Bitfield', ->
   OACK  = 1 << 5
   PACK  = 1 << 6
   QUACK = 1 << 7
-  
+
   it 'should have the right size', ->
     bitfield.size().should.equal 1
-  
+
   it 'should decode', ->
     stream = new DecodeStream new Buffer [JACK | MACK | PACK | NACK | QUACK]
-    bitfield.decode(stream).should.deep.equal 
+    bitfield.decode(stream).should.deep.equal
       Jack: yes, Kack: no, Lack: no, Mack: yes, Nack: yes, Oack: no, Pack: yes, Quack: yes
-    
+
   it 'should encode', (done) ->
     stream = new EncodeStream
     stream.pipe concat (buf) ->
       buf.should.deep.equal new Buffer [JACK | MACK | PACK | NACK | QUACK]
       done()
-      
+
     bitfield.encode stream, Jack: yes, Kack: no, Lack: no, Mack: yes, Nack: yes, Oack: no, Pack: yes, Quack: yes
     stream.end()
