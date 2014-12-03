@@ -81,6 +81,23 @@ Encoding produces zeros.
 var reserved = new r.Reserved(r.uint8, 10);
 ```
 
+### Optional
+
+The `Optional` type only encodes or decodes when given condition is truthy.
+
+```javascript
+// includes field
+var optional = new r.Optional(r.uint8, true);
+
+// excludes field
+var optional = new r.Optional(r.uint8, false);
+
+// determine whether field is to be included at runtime with a function
+var optional = new r.Optional(r.uint8, function() {
+  this.flags & 0x50
+});
+```
+
 ### Enum
 
 The `Enum` type maps a number to the value at that index in an array.
