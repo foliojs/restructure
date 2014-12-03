@@ -3,15 +3,15 @@ class Pointer
     @type = null if @type is 'void'
     @options.type ?= 'local'
     @options.allowNull ?= true
-    
+
   decode: (stream, ctx) ->
     offset = @offsetType.decode(stream)
     pos = stream.pos
-    
+
     # handle NULL pointers
     if offset is 0 and @options.allowNull
       return null
-      
+
     relative = switch @options.type
       when 'local'     then ctx._startOffset
       when 'immediate' then stream.pos - @offsetType.size()
@@ -20,14 +20,14 @@ class Pointer
         c = ctx
         while c.parent
           c= c.parent
-          
+
         c._startOffset
-    
+
     if @options.relativeTo
       relative += ctx.parent[@options.relativeTo]
-      
+
     ptr = offset + relative
-    
+
     if @type?
       stream.pos = ptr
       res = @type.decode(stream, ctx)
@@ -35,11 +35,11 @@ class Pointer
       return res
     else
       return ptr
-      
+
   size: (val, ctx) ->
     unless val?
       return @offsetType.size()
-    
+
     parent = ctx
     switch @options.type
       when 'local', 'immediate'
@@ -49,47 +49,47 @@ class Pointer
       else # global
         while ctx.parent
           ctx = ctx.parent
-    
+
     type = @type
     unless type?
       unless val instanceof VoidPointer
         throw new Error "Must be a VoidPointer"
-        
+
       type = val.type
       val = val.value
-    
+
     ctx?.pointerSize += type.size(val, parent)
     return @offsetType.size()
-    
+
   encode: (stream, val, ctx) ->
     parent = ctx
     if not val?
       @offsetType.encode(stream, 0)
       return
-      
+
     switch @options.type
       when 'local'
         relative = ctx.startOffset
       when 'immediate'
         relative = stream.pos + @offsetType.size(val, parent)
-      when 'parent' 
+      when 'parent'
         ctx = ctx.parent
         relative = ctx.startOffset
       else # global
         relative = 0
         while ctx.parent
           ctx = ctx.parent
-          
+
     if @options.relativeTo
       relative += ctx.val[@options.relativeTo]
-      
+
     @offsetType.encode(stream, ctx.pointerOffset - relative)
-    
+
     type = @type
     unless type?
       unless val instanceof VoidPointer
         throw new Error "Must be a VoidPointer"
-        
+
       type = val.type
       val = val.value
 
@@ -97,12 +97,12 @@ class Pointer
       type: type
       val: val
       parent: parent
-      
+
     ctx.pointerOffset += type.size(val, parent)
-    
+
 # A pointer whose type is determined at decode time
 class VoidPointer
   constructor: (@type, @value) ->
-    
+
 exports.Pointer = Pointer
 exports.VoidPointer = VoidPointer
