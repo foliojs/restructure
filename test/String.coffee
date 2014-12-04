@@ -29,10 +29,11 @@ describe 'String', ->
       string = new StringT 4, -> 'utf8'
       string.decode(stream).should.equal '🍻'
 
-    it 'should decode null-terminated string', ->
+    it 'should decode null-terminated string and read past terminator', ->
       stream = new DecodeStream new Buffer '🍻\x00'
       string = new StringT null, 'utf8'
       string.decode(stream).should.equal '🍻'
+      stream.pos.should.equal 5
 
     it 'should decode remainder of buffer when null-byte missing', ->
       stream = new DecodeStream new Buffer '🍻'

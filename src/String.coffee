@@ -19,7 +19,12 @@ class StringT
     if typeof encoding is 'function'
       encoding = encoding.call(parent) or 'ascii'
 
-    return stream.readString(length, encoding)
+    string = stream.readString(length, encoding)
+
+    if not @length and stream.pos < stream.length
+      stream.readUInt8()
+
+    return string
 
   size: (val, parent) ->
     encoding = @encoding
