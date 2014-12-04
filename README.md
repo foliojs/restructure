@@ -165,6 +165,9 @@ var struct = new r.Struct({
   len: r.uint8,
   str: new r.String('len', 'utf16be')
 });
+
+// null-terminated string (also known as C string)
+var str = new r.String(null, 'utf8')
 ```
 
 ### Array
