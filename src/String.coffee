@@ -5,7 +5,16 @@ class StringT
   constructor: (@length, @encoding = 'ascii') ->
 
   decode: (stream, parent) ->
-    length = utils.resolveLength @length, stream, parent
+    length = if @length
+      utils.resolveLength @length, stream, parent
+    else
+      {buffer, length, pos} = stream
+
+      while pos < length and buffer[pos] isnt 0x00
+        ++pos
+
+      pos - stream.pos
+
     encoding = @encoding
     if typeof encoding is 'function'
       encoding = encoding.call(parent) or 'ascii'
@@ -24,6 +33,9 @@ class StringT
     if @length instanceof NumberT
       size += @length.size()
 
+    if not @length
+      size += 1
+
     return size
 
   encode: (stream, val, parent) ->
@@ -35,5 +47,8 @@ class StringT
       @length.encode(stream, Buffer.byteLength(val, encoding))
 
     stream.writeString(val, encoding)
+
+    if not @length
+      stream.writeUInt8(0x00)
 
 module.exports = StringT

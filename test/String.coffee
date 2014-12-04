@@ -29,6 +29,16 @@ describe 'String', ->
       string = new StringT 4, -> 'utf8'
       string.decode(stream).should.equal '🍻'
 
+    it 'should decode null-terminated string', ->
+      stream = new DecodeStream new Buffer '🍻\x00'
+      string = new StringT null, 'utf8'
+      string.decode(stream).should.equal '🍻'
+
+    it 'should decode remainder of buffer when null-byte missing', ->
+      stream = new DecodeStream new Buffer '🍻'
+      string = new StringT null, 'utf8'
+      string.decode(stream).should.equal '🍻'
+
   describe 'size', ->
     it 'should use string length', ->
       string = new StringT 7
@@ -49,6 +59,10 @@ describe 'String', ->
     it 'should work with utf16be encoding', ->
       string = new StringT 10, 'utf16be'
       string.size('🍻').should.equal 4
+
+    it 'should take null-byte into account', ->
+      string = new StringT null, 'utf8'
+      string.size('🍻').should.equal 5
 
   describe 'encode', ->
     it 'should encode using string length', (done) ->
@@ -98,5 +112,15 @@ describe 'String', ->
         done()
 
       string = new StringT 4, -> 'utf8'
+      string.encode(stream, '🍻')
+      stream.end()
+
+    it 'should encode null-terminated string', (done) ->
+      stream = new EncodeStream
+      stream.pipe concat (buf) ->
+        buf.should.deep.equal new Buffer '🍻\x00'
+        done()
+
+      string = new StringT null, 'utf8'
       string.encode(stream, '🍻')
       stream.end()
