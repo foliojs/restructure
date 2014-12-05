@@ -5,7 +5,7 @@ class StringT
   constructor: (@length, @encoding = 'ascii') ->
 
   decode: (stream, parent) ->
-    length = if @length
+    length = if @length?
       utils.resolveLength @length, stream, parent
     else
       {buffer, length, pos} = stream
@@ -21,7 +21,7 @@ class StringT
 
     string = stream.readString(length, encoding)
 
-    if not @length and stream.pos < stream.length
+    if not @length? and stream.pos < stream.length
       stream.readUInt8()
 
     return string
@@ -38,7 +38,7 @@ class StringT
     if @length instanceof NumberT
       size += @length.size()
 
-    if not @length
+    if not @length?
       size += 1
 
     return size
@@ -53,7 +53,7 @@ class StringT
 
     stream.writeString(val, encoding)
 
-    if not @length
+    if not @length?
       stream.writeUInt8(0x00)
 
 module.exports = StringT
