@@ -22,7 +22,7 @@ class StringT
     string = stream.readString(length, encoding)
 
     if not @length? and stream.pos < stream.length
-      stream.readUInt8()
+      stream.pos++
 
     return string
 
@@ -39,7 +39,7 @@ class StringT
       size += @length.size()
 
     if not @length?
-      size += 1
+      size++
 
     return size
 
