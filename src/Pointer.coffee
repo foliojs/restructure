@@ -3,6 +3,8 @@ class Pointer
     @type = null if @type is 'void'
     @options.type ?= 'local'
     @options.allowNull ?= true
+    if @options.relativeTo
+      @relativeToGetter = new Function('ctx', "return ctx.#{@options.relativeTo}")
 
   decode: (stream, ctx) ->
     offset = @offsetType.decode(stream)
@@ -19,12 +21,12 @@ class Pointer
       else
         c = ctx
         while c.parent
-          c= c.parent
+          c = c.parent
 
         c._startOffset
 
     if @options.relativeTo
-      relative += ctx.parent[@options.relativeTo]
+      relative += @relativeToGetter ctx
 
     ptr = offset + relative
 
@@ -81,7 +83,7 @@ class Pointer
           ctx = ctx.parent
 
     if @options.relativeTo
-      relative += ctx.val[@options.relativeTo]
+      relative += @relativeToGetter parent.val
 
     @offsetType.encode(stream, ctx.pointerOffset - relative)
 

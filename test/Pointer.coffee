@@ -33,7 +33,7 @@ describe 'Pointer', ->
 
     it 'should support offsets relative to a property on the parent', ->
       stream = new DecodeStream new Buffer [1, 0, 0, 0, 0, 53]
-      pointer = new Pointer uint8, uint8, relativeTo: 'ptr'
+      pointer = new Pointer uint8, uint8, relativeTo: 'parent.ptr'
       pointer.decode(stream, _startOffset: 0, parent: ptr: 4).should.equal 53
 
     it 'should support returning pointer if there is no decode type', ->
