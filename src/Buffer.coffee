@@ -1,4 +1,5 @@
 utils = require './utils'
+{Number:NumberT} = require './Number'
 
 class BufferT
   constructor: (@length) ->
@@ -10,6 +11,9 @@ class BufferT
     return val.length
 
   encode: (stream, buf, parent) ->
+    if @length instanceof NumberT
+      @length.encode(stream, buf.length)
+    
     stream.writeBuffer(buf)
 
 module.exports = BufferT
