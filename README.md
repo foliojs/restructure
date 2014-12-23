@@ -57,18 +57,22 @@ and whatnot.
 
 ### Number Types
 
-The following builtin number types are available by default:
+The following built-in number types are available:
 
 ```javascript
 uint8, uint16, uint24, uint32, int8, int16, int24, int32, float, double, fixed16, fixed32
 ```
 
-Numbers are big endian (network order) by default. You can create your own number types, however.
-For example, if you want a little endian uint32, you could use the following:
+Numbers are big-endian (network order) by default, but little-endian is supported, too:
 
 ```javascript
-// capitalization is important (maps to Buffer reading methods)
-var uint32le = new r.Number('UInt32', 'LE');
+uint16le, uint24le, uint32le, int16le, int24le, int32le, floatle, doublele, fixed16le, fixed32le
+```
+
+To avoid ambiguity, big-endian may be used explicitly:
+
+```javascript
+uint16be, uint24be, uint32be, int16be, int24be, int32be, floatbe, doublebe, fixed16be, fixed32be
 ```
 
 ### Reserved
