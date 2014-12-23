@@ -36,6 +36,10 @@ describe 'Number', ->
       uint8.encode(stream, 0xff)
       stream.end()
 
+  describe 'uint16', ->
+    it 'is an alias for uint16be', ->
+      uint16.should.equal uint16be
+
   describe 'uint16be', ->
     it 'should decode', ->
       stream = new DecodeStream new Buffer [0xab, 0xff]
@@ -52,10 +56,6 @@ describe 'Number', ->
 
       uint16be.encode(stream, 0xabff)
       stream.end()
-
-  describe 'uint16', ->
-    it 'is an alias for uint16be', ->
-      uint16.should.equal uint16be
 
   describe 'uint16le', ->
     it 'should decode', ->
