@@ -17,15 +17,23 @@ class NumberT
 
 exports.Number = NumberT
 exports.uint8 = new NumberT('UInt8')
-exports.uint16 = new NumberT('UInt16')
-exports.uint24 = new NumberT('UInt24')
-exports.uint32 = new NumberT('UInt32')
+exports.uint16be = exports.uint16 = new NumberT('UInt16', 'BE')
+exports.uint16le = new NumberT('UInt16', 'LE')
+exports.uint24be = exports.uint24 = new NumberT('UInt24', 'BE')
+exports.uint24le = new NumberT('UInt24', 'LE')
+exports.uint32be = exports.uint32 = new NumberT('UInt32', 'BE')
+exports.uint32le = new NumberT('UInt32', 'LE')
 exports.int8 = new NumberT('Int8')
-exports.int16 = new NumberT('Int16')
-exports.int24 = new NumberT('Int24')
-exports.int32 = new NumberT('Int32')
-exports.float = new NumberT('Float')
-exports.double = new NumberT('Double')
+exports.int16be = exports.int16 = new NumberT('Int16', 'BE')
+exports.int16le = new NumberT('Int16', 'LE')
+exports.int24be = exports.int24 = new NumberT('Int24', 'BE')
+exports.int24le = new NumberT('Int24', 'LE')
+exports.int32be = exports.int32 = new NumberT('Int32', 'BE')
+exports.int32le = new NumberT('Int32', 'LE')
+exports.floatbe = exports.float = new NumberT('Float', 'BE')
+exports.floatle = new NumberT('Float', 'LE')
+exports.doublebe = exports.double = new NumberT('Double', 'BE')
+exports.doublele = new NumberT('Double', 'LE')
 
 class Fixed extends NumberT
   constructor: (size, endian) ->
@@ -39,5 +47,7 @@ class Fixed extends NumberT
     super stream, val * @_point | 0
 
 exports.Fixed = Fixed
-exports.fixed16 = new Fixed 16
-exports.fixed32 = new Fixed 32
+exports.fixed16be = exports.fixed16 = new Fixed(16, 'BE')
+exports.fixed16le = new Fixed(16, 'LE')
+exports.fixed32be = exports.fixed32 =new Fixed(32, 'BE')
+exports.fixed32le = new Fixed(32, 'LE')
