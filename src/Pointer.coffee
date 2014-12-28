@@ -23,7 +23,7 @@ class Pointer
         while c.parent
           c = c.parent
 
-        c._startOffset
+        c._startOffset or 0
 
     if @options.relativeTo
       relative += @relativeToGetter ctx
