@@ -195,6 +195,9 @@ var struct = new r.Struct({
   len: r.uint8,
   arr: new r.Array(r.uint8, 'len')
 });
+
+// treat as amount of bytes instead (may be used in all the above scenarios)
+var arr = new r.Array(r.uint16, 6, 'bytes');
 ```
 
 ### Struct
