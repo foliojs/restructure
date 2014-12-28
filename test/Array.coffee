@@ -1,4 +1,4 @@
-{Array:ArrayT, Pointer, uint8, DecodeStream, EncodeStream} = require '../'
+{Array:ArrayT, Pointer, uint8, uint16, DecodeStream, EncodeStream} = require '../'
 should = require('chai').should()
 concat = require 'concat-stream'
 
@@ -14,6 +14,11 @@ describe 'Array', ->
       array = new ArrayT uint8, 'len'
       array.decode(stream, len: 4).should.deep.equal [1, 2, 3, 4]
 
+    it 'should decode amount of bytes from parent key', ->
+      stream = new DecodeStream new Buffer [1, 2, 3, 4, 5]
+      array = new ArrayT uint16, 'len', 'bytes'
+      array.decode(stream, len: 4).should.deep.equal [258, 772]
+
     it 'should decode length as number before array', ->
       stream = new DecodeStream new Buffer [4, 1, 2, 3, 4]
       array = new ArrayT uint8, uint8
@@ -24,8 +29,13 @@ describe 'Array', ->
       array = new ArrayT uint8, -> 4
       array.decode(stream).should.deep.equal [1, 2, 3, 4]
 
+    it 'should decode amount of bytes from function', ->
+      stream = new DecodeStream new Buffer [1, 2, 3, 4, 5]
+      array = new ArrayT uint16, (-> 4), 'bytes'
+      array.decode(stream).should.deep.equal [258, 772]
+
     it 'should decode to the end of the parent if no length is given', ->
-      stream = new DecodeStream new Buffer [1, 2, 3, 4]
+      stream = new DecodeStream new Buffer [1, 2, 3, 4, 5]
       array = new ArrayT uint8
       array.decode(stream, _length: 4, _startOffset: 0).should.deep.equal [1, 2, 3, 4]
 

@@ -2,7 +2,7 @@
 utils = require './utils'
 
 class ArrayT
-  constructor: (@type, @length) ->
+  constructor: (@type, @length, @lengthType = 'count') ->
 
   decode: (stream, parent) ->
     pos = stream.pos
@@ -21,8 +21,13 @@ class ArrayT
 
       ctx = res
 
-    if parent?._length and not length?
-      while stream.pos < parent._length + parent._startOffset
+    if not length? or @lengthType == 'bytes'
+      target = if length?
+        stream.pos + length
+      else if parent?._length
+        parent._startOffset + parent._length
+
+      while stream.pos < target
         res.push @type.decode(stream, ctx)
 
     else
