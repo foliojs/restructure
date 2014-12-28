@@ -9,6 +9,11 @@ describe 'Array', ->
       array = new ArrayT uint8, 4
       array.decode(stream).should.deep.equal [1, 2, 3, 4]
 
+    it 'should decode fixed amount of bytes', ->
+      stream = new DecodeStream new Buffer [1, 2, 3, 4, 5]
+      array = new ArrayT uint16, 4, 'bytes'
+      array.decode(stream).should.deep.equal [258, 772]
+
     it 'should decode length from parent key', ->
       stream = new DecodeStream new Buffer [1, 2, 3, 4, 5]
       array = new ArrayT uint8, 'len'
@@ -23,6 +28,11 @@ describe 'Array', ->
       stream = new DecodeStream new Buffer [4, 1, 2, 3, 4, 5]
       array = new ArrayT uint8, uint8
       array.decode(stream).should.deep.equal [1, 2, 3, 4]
+
+    it 'should decode amount of bytes as number before array', ->
+      stream = new DecodeStream new Buffer [4, 1, 2, 3, 4, 5]
+      array = new ArrayT uint16, uint8, 'bytes'
+      array.decode(stream).should.deep.equal [258, 772]
 
     it 'should decode length from function', ->
       stream = new DecodeStream new Buffer [1, 2, 3, 4, 5]
