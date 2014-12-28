@@ -39,6 +39,11 @@ describe 'Array', ->
       array = new ArrayT uint8
       array.decode(stream, _length: 4, _startOffset: 0).should.deep.equal [1, 2, 3, 4]
 
+    it 'should decode to the end of the stream if no parent and length is given', ->
+      stream = new DecodeStream new Buffer [1, 2, 3, 4]
+      array = new ArrayT uint8
+      array.decode(stream).should.deep.equal [1, 2, 3, 4]
+
   describe 'size', ->
     it 'should use array length', ->
       array = new ArrayT uint8, 10

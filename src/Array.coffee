@@ -26,6 +26,8 @@ class ArrayT
         stream.pos + length
       else if parent?._length
         parent._startOffset + parent._length
+      else
+        stream.length
 
       while stream.pos < target
         res.push @type.decode(stream, ctx)
