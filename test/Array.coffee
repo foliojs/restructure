@@ -5,12 +5,12 @@ concat = require 'concat-stream'
 describe 'Array', ->
   describe 'decode', ->
     it 'should decode fixed length', ->
-      stream = new DecodeStream new Buffer [1, 2, 3, 4]
+      stream = new DecodeStream new Buffer [1, 2, 3, 4, 5]
       array = new ArrayT uint8, 4
       array.decode(stream).should.deep.equal [1, 2, 3, 4]
 
     it 'should decode length from parent key', ->
-      stream = new DecodeStream new Buffer [1, 2, 3, 4]
+      stream = new DecodeStream new Buffer [1, 2, 3, 4, 5]
       array = new ArrayT uint8, 'len'
       array.decode(stream, len: 4).should.deep.equal [1, 2, 3, 4]
 
@@ -20,12 +20,12 @@ describe 'Array', ->
       array.decode(stream, len: 4).should.deep.equal [258, 772]
 
     it 'should decode length as number before array', ->
-      stream = new DecodeStream new Buffer [4, 1, 2, 3, 4]
+      stream = new DecodeStream new Buffer [4, 1, 2, 3, 4, 5]
       array = new ArrayT uint8, uint8
       array.decode(stream).should.deep.equal [1, 2, 3, 4]
 
     it 'should decode length from function', ->
-      stream = new DecodeStream new Buffer [1, 2, 3, 4]
+      stream = new DecodeStream new Buffer [1, 2, 3, 4, 5]
       array = new ArrayT uint8, -> 4
       array.decode(stream).should.deep.equal [1, 2, 3, 4]
 
