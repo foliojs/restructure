@@ -75,6 +75,15 @@ To avoid ambiguity, big-endian may be used explicitly:
 uint16be, uint24be, uint32be, int16be, int24be, int32be, floatbe, doublebe, fixed16be, fixed32be
 ```
 
+### Boolean
+
+Booleans are encoded as `0` or `1` using one of the above number types.
+
+```javascript
+//
+var bool = new r.Boolean(r.uint32);
+```
+
 ### Reserved
 
 The `Reserved` type simply skips data in a structure, where there are reserved fields.
