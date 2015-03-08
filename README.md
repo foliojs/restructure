@@ -80,7 +80,6 @@ uint16be, uint24be, uint32be, int16be, int24be, int32be, floatbe, doublebe, fixe
 Booleans are encoded as `0` or `1` using one of the above number types.
 
 ```javascript
-//
 var bool = new r.Boolean(r.uint32);
 ```
 
