@@ -18,6 +18,7 @@
   "scripts": {
     "test": "mocha",
     "cover": "mocha --require coverage.js --reporter html-cov > coverage.html",
+    "coveralls": "mocha --require coverage.js --reporter mocha-lcov-reporter | coveralls",
     "prepublish": "coffee -c src/ index.coffee",
     "postpublish": "rm -rf index.js src/*.js"
   },
