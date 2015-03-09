@@ -16,7 +16,10 @@
     "mocha-lcov-reporter": "0.0.1"
   },
   "scripts": {
-    "test": "make test"
+    "test": "mocha",
+    "cover": "mocha --require coverage.js --reporter html-cov > coverage.html",
+    "prepublish": "coffee -c src/ index.coffee",
+    "postpublish": "rm -rf index.js src/*.js"
   },
   "repository": {
     "type": "git",
