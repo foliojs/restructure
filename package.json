@@ -1,6 +1,6 @@
 {
   "name": "restructure",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "Declaratively encode and decode binary data",
   "main": "index.js",
   "dependencies": {
@@ -17,7 +17,9 @@
     "mocha-lcov-reporter": "0.0.1"
   },
   "browserify": {
-    "transform": ["browserify-optional"]
+    "transform": [
+      "browserify-optional"
+    ]
   },
   "scripts": {
     "test": "mocha",
