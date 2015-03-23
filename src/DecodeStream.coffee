@@ -1,4 +1,4 @@
-iconv = require 'iconv-lite'
+try iconv = require 'iconv-lite'
 
 class DecodeStream
   constructor: (@buffer) ->
@@ -43,7 +43,10 @@ class DecodeStream
 
       else
         buf = @readBuffer length
-        return iconv.decode(buf, encoding)
+        if iconv
+          return iconv.decode(buf, encoding)
+          
+        return buf
 
   readBuffer: (length) ->
     return @buffer.slice(@pos, @pos += length)
