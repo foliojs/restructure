@@ -3,6 +3,7 @@ class Pointer
     @type = null if @type is 'void'
     @options.type ?= 'local'
     @options.allowNull ?= true
+    @options.nullValue ?= 0
     if @options.relativeTo
       @relativeToGetter = new Function('ctx', "return ctx.#{@options.relativeTo}")
 
@@ -11,7 +12,7 @@ class Pointer
     pos = stream.pos
 
     # handle NULL pointers
-    if offset is 0 and @options.allowNull
+    if offset is @options.nullValue and @options.allowNull
       return null
 
     relative = switch @options.type
@@ -66,7 +67,7 @@ class Pointer
   encode: (stream, val, ctx) ->
     parent = ctx
     if not val?
-      @offsetType.encode(stream, 0)
+      @offsetType.encode(stream, @options.nullValue)
       return
 
     switch @options.type

@@ -246,7 +246,8 @@ var Person = new r.VersionedStruct(r.uint8, {
 ### Pointer
 
 Pointers map an address or offset encoded as a number, to a value encoded elsewhere in the buffer.
-There are a couple options you can use: `type`, and `relativeTo`. The `type` option has these possible values:
+There are a few options you can use: `type`, `relativeTo`, `allowNull`, and `nullValue`. 
+The `type` option has these possible values:
 
 * `local` (default) - the encoded offset is relative to the start of the containing structure
 * `immediate` - the encoded offset is relative to the position of the pointer itself
@@ -255,6 +256,10 @@ There are a couple options you can use: `type`, and `relativeTo`. The `type` opt
 
 The `relativeTo` option specifies that the encoded offset is relative to a field on the containing structure.
 By default, pointers are relative to the start of the containing structure (`local`).
+
+The `allowNull` option lets you specify whether zero offsets are allowed or should produce `null`. This is
+set to `true` by default. The `nullValue` option is related, and lets you override the encoded value that
+represents `null`. By default, the `nullValue` is zero.
 
 ```javascript
 var Address = new r.Struct({
