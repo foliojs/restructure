@@ -36,9 +36,9 @@ exports.doublebe = exports.double = new NumberT('Double', 'BE')
 exports.doublele = new NumberT('Double', 'LE')
 
 class Fixed extends NumberT
-  constructor: (size, endian) ->
+  constructor: (size, endian, fracBits = size >> 1) ->
     super "Int#{size}", endian
-    @_point = 1 << (size >> 1)
+    @_point = 1 << fracBits
 
   decode: (stream) ->
     return super(stream) / @_point
