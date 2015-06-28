@@ -20,7 +20,7 @@ below for more information.
 var r = require('restructure');
 
 var Person = new r.Struct({
-  name: r.String(r.uint8, 'utf8'),
+  name: new r.String(r.uint8, 'utf8'),
   age: r.uint8
 });
 
@@ -215,7 +215,7 @@ arrays of structures, and pointers to other types (discussed below) are supporte
 
 ```javascript
 var Person = new r.Struct({
-  name: r.String(r.uint8, 'utf8'),
+  name: new r.String(r.uint8, 'utf8'),
   age: r.uint8
 });
 ```
@@ -232,7 +232,7 @@ common to all versions, and separate fields listed for each version number.
 var Person = new r.VersionedStruct(r.uint8, {
   // optional header common to all versions
   header: {
-    name: r.String(r.uint8, 'utf8')
+    name: new r.String(r.uint8, 'utf8')
   },
   0: {
     age: r.uint8
@@ -263,12 +263,12 @@ represents `null`. By default, the `nullValue` is zero.
 
 ```javascript
 var Address = new r.Struct({
-  street: r.String(r.uint8),
-  zip: r.String(5)
+  street: new r.String(r.uint8),
+  zip: new r.String(5)
 });
 
 var Person = new r.Struct({
-  name: r.String(r.uint8, 'utf8'),
+  name: new r.String(r.uint8, 'utf8'),
   age: r.uint8,
   ptrStart: r.uint8,
   address: new r.Pointer(r.uint8, Address)
