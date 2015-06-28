@@ -106,7 +106,7 @@ var optional = new r.Optional(r.uint8, false);
 
 // determine whether field is to be included at runtime with a function
 var optional = new r.Optional(r.uint8, function() {
-  this.flags & 0x50
+  return this.flags & 0x50;
 });
 ```
 
