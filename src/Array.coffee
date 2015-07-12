@@ -10,7 +10,7 @@ class ArrayT
     res = []
     ctx = parent
     
-    if @length
+    if @length?
       length = utils.resolveLength @length, stream, parent
 
     if @length instanceof NumberT
