@@ -9,7 +9,9 @@ class ArrayT
 
     res = []
     ctx = parent
-    length = utils.resolveLength @length, stream, parent
+    
+    if @length
+      length = utils.resolveLength @length, stream, parent
 
     if @length instanceof NumberT
       # define hidden properties

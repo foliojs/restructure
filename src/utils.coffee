@@ -2,21 +2,21 @@
 
 exports.resolveLength = (length, stream, parent) ->
   if typeof length is 'number'
-    return length
+    res = length
 
-  if typeof length is 'function'
-    return length.call(parent)
+  else if typeof length is 'function'
+    res = length.call(parent)      
 
-  if parent and typeof length is 'string'
-    return parent[length]
+  else if parent and typeof length is 'string'
+    res = parent[length]
 
-  if length instanceof NumberT
-    unless stream
-      throw new Error 'Not a fixed size'
-      
-    return length.decode(stream)
+  else if stream and length instanceof NumberT
+    res = length.decode(stream)
 
-  return null
+  if isNaN res
+    throw new Error 'Not a fixed size'
+    
+  return res
 
 class PropertyDescriptor
   constructor: (opts = {}) ->

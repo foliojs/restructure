@@ -74,7 +74,7 @@ describe 'Struct', ->
         age: uint8
 
       should.throw ->
-        struct.size().should.equal 7
+        struct.size()
       , /not a fixed size/i
       
   describe 'encode', ->
