@@ -1,6 +1,7 @@
 exports.EncodeStream    = require './src/EncodeStream'
 exports.DecodeStream    = require './src/DecodeStream'
 exports.Array           = require './src/Array'
+exports.LazyArray       = require './src/LazyArray'
 exports.Bitfield        = require './src/Bitfield'
 exports.Boolean         = require './src/Boolean'
 exports.Buffer          = require './src/Buffer'
