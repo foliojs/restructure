@@ -12,7 +12,6 @@ class Pointer
 
   decode: (stream, ctx) ->
     offset = @offsetType.decode(stream)
-    pos = stream.pos
 
     # handle NULL pointers
     if offset is @options.nullValue and @options.allowNull
