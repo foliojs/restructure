@@ -1,4 +1,4 @@
-{Pointer, VoidPointer, uint8, DecodeStream, EncodeStream} = require '../'
+{Pointer, VoidPointer, uint8, DecodeStream, EncodeStream, Struct} = require '../'
 should = require('chai').should()
 concat = require 'concat-stream'
 
@@ -40,6 +40,16 @@ describe 'Pointer', ->
       stream = new DecodeStream new Buffer [4]
       pointer = new Pointer uint8, 'void'
       pointer.decode(stream, _startOffset: 0).should.equal 4
+      
+    it 'should support decoding pointers lazily', ->
+      stream = new DecodeStream new Buffer [1, 53]
+      struct = new Struct
+        ptr: new Pointer uint8, uint8, lazy: yes
+        
+      res = struct.decode(stream)
+      Object.getOwnPropertyDescriptor(res, 'ptr').get.should.be.a('function')
+      Object.getOwnPropertyDescriptor(res, 'ptr').enumerable.should.equal(true)
+      res.ptr.should.equal 53
 
   describe 'size', ->
     it 'should add to local pointerSize', ->

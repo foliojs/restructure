@@ -14,3 +14,13 @@ exports.resolveLength = (length, stream, parent) ->
     return length.decode(stream)
 
   return null
+
+class PropertyDescriptor
+  constructor: (opts = {}) ->
+    @enumerable = true
+    @configurable = true
+    
+    for key, val of opts
+      this[key] = val
+
+exports.PropertyDescriptor = PropertyDescriptor
