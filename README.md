@@ -208,6 +208,25 @@ var struct = new r.Struct({
 var arr = new r.Array(r.uint16, 6, 'bytes');
 ```
 
+### LazyArray
+
+The `LazyArray` type extends from the `Array` type, and is useful for large arrays that you do not need to access sequentially. 
+It avoids decoding the entire array upfront, and instead only decodes and caches individual items as needed. It only works when 
+the elements inside the array have a fixed size.
+
+Instead of returning a JavaScript array, the `LazyArray` type returns a custom object that can be used to access the elements.
+
+```javascript
+var arr = new r.LazyArray(r.uint16, 2048);
+var res = arr.decode(stream);
+
+// get a single element
+var el = res.get(2);
+
+// convert to a normal array (decode all elements)
+var array = res.toArray();
+```
+
 ### Struct
 
 A `Struct` maps to and from JavaScript objects, containing keys of various previously discussed types. Sub structures,
