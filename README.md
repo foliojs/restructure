@@ -261,6 +261,10 @@ The `allowNull` option lets you specify whether zero offsets are allowed or shou
 set to `true` by default. The `nullValue` option is related, and lets you override the encoded value that
 represents `null`. By default, the `nullValue` is zero.
 
+The `lazy` option allows lazy decoding of the pointer's value by defining a getter on the parent object.
+This only works when the pointer is contained within a Struct, but can be used to speed up decoding
+quite a bit when not all of the data is needed right away.
+
 ```javascript
 var Address = new r.Struct({
   street: r.String(r.uint8),
