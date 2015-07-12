@@ -1,3 +1,5 @@
+utils = require './utils'
+
 class Struct
   constructor: (@fields = {}) ->
 
@@ -26,8 +28,13 @@ class Struct
         val = type.call(res)
       else
         val = type.decode(stream, res)
+        
+      unless val is undefined
+        if val instanceof utils.PropertyDescriptor
+          Object.defineProperty res, key, val
+        else
+          res[key] = val
 
-      res[key] = val unless val is undefined
       res._currentOffset = stream.pos - res._startOffset
 
     return

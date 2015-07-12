@@ -1,15 +1,17 @@
+utils = require './utils'
+
 class Pointer
   constructor: (@offsetType, @type, @options = {}) ->
     @type = null if @type is 'void'
     @options.type ?= 'local'
     @options.allowNull ?= true
     @options.nullValue ?= 0
+    @options.lazy ?= false
     if @options.relativeTo
       @relativeToGetter = new Function('ctx', "return ctx.#{@options.relativeTo}")
 
   decode: (stream, ctx) ->
     offset = @offsetType.decode(stream)
-    pos = stream.pos
 
     # handle NULL pointers
     if offset is @options.nullValue and @options.allowNull
@@ -32,10 +34,23 @@ class Pointer
     ptr = offset + relative
 
     if @type?
-      stream.pos = ptr
-      res = @type.decode(stream, ctx)
-      stream.pos = pos
-      return res
+      val = null
+      decodeValue = =>
+        return val if val?
+          
+        pos = stream.pos
+        stream.pos = ptr
+        val = @type.decode(stream, ctx)
+        stream.pos = pos
+        return val
+        
+      # If this is a lazy pointer, define a getter to decode only when needed.
+      # This obviously only works when the pointer is contained by a Struct.
+      if @options.lazy
+        return new utils.PropertyDescriptor
+          get: decodeValue
+        
+      return decodeValue()
     else
       return ptr
 
