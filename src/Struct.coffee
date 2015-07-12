@@ -47,7 +47,7 @@ class Struct
 
     size = 0
     for key, type of @fields when type.size?
-      size += type.size(val[key] or 0, ctx)
+      size += type.size(val[key], ctx)
 
     if includePointers
       size += ctx.pointerSize

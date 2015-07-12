@@ -55,9 +55,6 @@ class Pointer
       return ptr
 
   size: (val, ctx) ->
-    unless val?
-      return @offsetType.size()
-
     parent = ctx
     switch @options.type
       when 'local', 'immediate'
@@ -76,7 +73,9 @@ class Pointer
       type = val.type
       val = val.value
 
-    ctx?.pointerSize += type.size(val, parent)
+    if val and ctx
+      ctx.pointerSize += type.size(val, parent)
+      
     return @offsetType.size()
 
   encode: (stream, val, ctx) ->

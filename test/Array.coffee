@@ -62,6 +62,10 @@ describe 'Array', ->
     it 'should add size of length field before string', ->
       array = new ArrayT uint8, uint8
       array.size([1, 2, 3, 4]).should.equal 5
+      
+    it 'should use defined length if no value given', ->
+      array = new ArrayT uint8, 10
+      array.size().should.equal 10
 
   describe 'encode', ->
     it 'should encode using array length', (done) ->

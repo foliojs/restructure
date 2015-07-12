@@ -64,7 +64,11 @@ describe 'String', ->
     it 'should take null-byte into account', ->
       string = new StringT null, 'utf8'
       string.size('🍻').should.equal 5
-
+      
+    it 'should use defined length if no value given', ->
+      array = new StringT 10
+      array.size().should.equal 10
+      
   describe 'encode', ->
     it 'should encode using string length', (done) ->
       stream = new EncodeStream

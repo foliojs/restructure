@@ -11,6 +11,9 @@ exports.resolveLength = (length, stream, parent) ->
     return parent[length]
 
   if length instanceof NumberT
+    unless stream
+      throw new Error 'Not a fixed size'
+      
     return length.decode(stream)
 
   return null

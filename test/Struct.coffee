@@ -60,7 +60,23 @@ describe 'Struct', ->
         ptr: 'hello'
 
       size.should.equal 14
+      
+    it 'should get the correct size when no value is given', ->
+      struct = new Struct
+        name: new StringT 4
+        age: uint8
 
+      struct.size().should.equal 5
+      
+    it 'should throw when getting non-fixed length size and no value is given', ->
+      struct = new Struct
+        name: new StringT uint8
+        age: uint8
+
+      should.throw ->
+        struct.size().should.equal 7
+      , /not a fixed size/i
+      
   describe 'encode', ->
     it 'should encode objects to buffers', (done) ->
       stream = new EncodeStream

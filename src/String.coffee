@@ -25,8 +25,12 @@ class StringT
       stream.pos++
 
     return string
-
+    
   size: (val, parent) ->
+    # Use the defined value if no value was given
+    unless val
+      return utils.resolveLength @length, null, parent
+    
     encoding = @encoding
     if typeof encoding is 'function'
       encoding = encoding.call(parent?.val) or 'ascii'

@@ -7,7 +7,10 @@ class BufferT
     length = utils.resolveLength @length, stream, parent
     return stream.readBuffer(length)
 
-  size: (val) ->
+  size: (val, parent) ->
+    unless val
+      return utils.resolveLength @length, null, parent
+      
     return val.length
 
   encode: (stream, buf, parent) ->

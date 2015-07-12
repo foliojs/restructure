@@ -30,6 +30,9 @@ class VersionedStruct extends Struct
     return res
 
   size: (val, parent, includePointers = true) ->
+    unless val
+      throw new Error 'Not a fixed size'
+    
     ctx =
       parent: parent
       val: val
@@ -41,14 +44,14 @@ class VersionedStruct extends Struct
 
     if @versions.header
       for key, type of @versions.header when type.size?
-        size += type.size(val[key] or 0, ctx)
+        size += type.size(val[key], ctx)
 
     fields = @versions[val.version]
     if not fields?
       throw new Error "Unknown version #{val.version}"
 
     for key, type of fields when type.size?
-      size += type.size(val[key] or 0, ctx)
+      size += type.size(val[key], ctx)
 
     if includePointers
       size += ctx.pointerSize
@@ -72,7 +75,7 @@ class VersionedStruct extends Struct
 
     if @versions.header
       for key, type of @versions.header when type.encode?
-        type.encode(stream, val[key] or 0, ctx)
+        type.encode(stream, val[key], ctx)
 
     fields = @versions[val.version]
     for key, type of fields when type.encode?

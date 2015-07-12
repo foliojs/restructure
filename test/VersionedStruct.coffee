@@ -226,6 +226,20 @@ describe 'VersionedStruct', ->
         ptr: 'hello'
 
       size.should.equal 15
+    
+    it 'should throw if no value is given', ->
+      struct = new VersionedStruct uint8,
+        0:
+          name: new StringT 4, 'ascii'
+          age: uint8
+        1:
+          name: new StringT 4, 'utf8'
+          age: uint8
+          gender: uint8
+
+      should.throw ->
+        struct.size()
+      , /not a fixed size/i
 
   describe 'encode', ->
     it 'should encode objects to buffers', (done) ->

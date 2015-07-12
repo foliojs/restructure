@@ -87,6 +87,10 @@ describe 'Pointer', ->
       ctx = pointerSize: 0
       should.throw ->
         pointer.size(30, ctx).should.equal 1
+        
+    it 'should return a fixed size without a value', ->
+      pointer = new Pointer uint8, uint8
+      pointer.size().should.equal 1
 
   describe 'encode', ->
     it 'should handle null pointers', (done) ->
