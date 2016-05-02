@@ -25,7 +25,7 @@ class Struct
   _parseFields: (stream, res, fields) ->
     for key, type of fields
       if typeof type is 'function'
-        val = type.call(res)
+        val = type.call(res, res)
       else
         val = type.decode(stream, res)
         

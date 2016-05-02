@@ -4,7 +4,7 @@ class Optional
   decode: (stream, parent) ->
     condition = @condition
     if typeof condition is 'function'
-      condition = condition.call(parent)
+      condition = condition.call(parent, parent)
 
     if condition
       return @type.decode(stream, parent)
@@ -12,7 +12,7 @@ class Optional
   size: (val, parent) ->
     condition = @condition
     if typeof condition is 'function'
-      condition = condition.call(parent)
+      condition = condition.call(parent, parent)
 
     if condition
       return @type.size(val, parent)
@@ -22,7 +22,7 @@ class Optional
   encode: (stream, val, parent) ->
     condition = @condition
     if typeof condition is 'function'
-      condition = condition.call(parent)
+      condition = condition.call(parent, parent)
 
     if condition
       @type.encode(stream, val, parent)

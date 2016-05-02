@@ -17,7 +17,7 @@ class StringT
 
     encoding = @encoding
     if typeof encoding is 'function'
-      encoding = encoding.call(parent) or 'ascii'
+      encoding = encoding.call(parent, parent) or 'ascii'
 
     string = stream.readString(length, encoding)
 
@@ -33,7 +33,7 @@ class StringT
     
     encoding = @encoding
     if typeof encoding is 'function'
-      encoding = encoding.call(parent?.val) or 'ascii'
+      encoding = encoding.call(parent?.val, parent?.val) or 'ascii'
 
     if encoding is 'utf16be'
       encoding = 'utf16le'
@@ -50,7 +50,7 @@ class StringT
   encode: (stream, val, parent) ->
     encoding = @encoding
     if typeof encoding is 'function'
-      encoding = encoding.call(parent?.val) or 'ascii'
+      encoding = encoding.call(parent?.val, parent?.val) or 'ascii'
 
     if @length instanceof NumberT
       @length.encode(stream, Buffer.byteLength(val, encoding))

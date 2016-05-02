@@ -5,7 +5,7 @@ exports.resolveLength = (length, stream, parent) ->
     res = length
 
   else if typeof length is 'function'
-    res = length.call(parent)      
+    res = length.call(parent, parent)      
 
   else if parent and typeof length is 'string'
     res = parent[length]
