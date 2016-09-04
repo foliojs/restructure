@@ -11,7 +11,7 @@ class Pointer
       @relativeToGetter = new Function('ctx', "return ctx.#{@options.relativeTo}")
 
   decode: (stream, ctx) ->
-    offset = @offsetType.decode(stream)
+    offset = @offsetType.decode(stream, ctx)
 
     # handle NULL pointers
     if offset is @options.nullValue and @options.allowNull
