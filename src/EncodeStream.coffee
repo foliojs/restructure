@@ -3,22 +3,35 @@ DecodeStream = require './DecodeStream'
 try iconv = require 'iconv-lite'
 
 class EncodeStream extends stream.Readable
-  constructor: ->
+  constructor: (bufferSize = 65536) ->
     super
+    @buffer = new Buffer(bufferSize)
+    @bufferOffset = 0
     @pos = 0
 
   for key of Buffer.prototype when key.slice(0, 5) is 'write'
     do (key) =>
-      bytes = DecodeStream.TYPES[key.replace(/write|[BL]E/g, '')]
+      bytes = +DecodeStream.TYPES[key.replace(/write|[BL]E/g, '')]
       EncodeStream::[key] = (value) ->
-        buffer = new Buffer +bytes
-        buffer[key](value, 0)
-        @writeBuffer buffer
+        @ensure bytes
+        @buffer[key](value, @bufferOffset)
+        @bufferOffset += bytes
+        @pos += bytes
 
   _read: ->
     # do nothing, required by node
 
+  ensure: (bytes) ->
+    if @bufferOffset + bytes > @buffer.length
+      @flush()
+      
+  flush: ->
+    if @bufferOffset > 0
+      @push new Buffer @buffer.slice(0, @bufferOffset)
+      @bufferOffset = 0
+
   writeBuffer: (buffer) ->
+    @flush()
     @push buffer
     @pos += buffer.length
 
@@ -45,18 +58,18 @@ class EncodeStream extends stream.Readable
           throw new Error 'Install iconv-lite to enable additional string encodings.'
 
   writeUInt24BE: (val) ->
-    buf = new Buffer(3)
-    buf[0] = val >>> 16 & 0xff
-    buf[1] = val >>> 8  & 0xff
-    buf[2] = val & 0xff
-    @writeBuffer buf
+    @ensure 3
+    @buffer[@bufferOffset++] = val >>> 16 & 0xff
+    @buffer[@bufferOffset++] = val >>> 8  & 0xff
+    @buffer[@bufferOffset++] = val & 0xff
+    @pos += 3
 
   writeUInt24LE: (val) ->
-    buf = new Buffer(3)
-    buf[0] = val & 0xff
-    buf[1] = val >>> 8 & 0xff
-    buf[2] = val >>> 16 & 0xff
-    @writeBuffer buf
+    @ensure 3
+    @buffer[@bufferOffset++] = val & 0xff
+    @buffer[@bufferOffset++] = val >>> 8 & 0xff
+    @buffer[@bufferOffset++] = val >>> 16 & 0xff
+    @pos += 3
 
   writeInt24BE: (val) ->
     if val >= 0
@@ -71,11 +84,18 @@ class EncodeStream extends stream.Readable
       @writeUInt24LE val + 0xffffff + 1
 
   fill: (val, length) ->
-    buf = new Buffer(length)
-    buf.fill(val)
-    @writeBuffer buf
+    if length < @buffer.length
+      @ensure length
+      @buffer.fill(val, @bufferOffset, @bufferOffset + length)
+      @bufferOffset += length
+      @pos += length
+    else
+      buf = new Buffer(length)
+      buf.fill(val)
+      @writeBuffer buf
 
   end: ->
+    @flush()
     @push null
 
 module.exports = EncodeStream
