@@ -1,6 +1,6 @@
 {
   "name": "restructure",
-  "version": "0.5.2",
+  "version": "0.5.3",
   "description": "Declaratively encode and decode binary data",
   "main": "index.js",
   "dependencies": {
