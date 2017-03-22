@@ -4,10 +4,12 @@ class VersionedStruct extends Struct
   constructor: (@type, @versions = {}) ->
 
   versionGetter: (parent) ->
-    parent[@type]
+    if typeof @type is 'string'
+      parent[@type]
 
   versionSetter: (parent, version) ->
-    parent[@type] = version
+    if typeof @type is 'string'
+      parent[@type] = version
 
   decode: (stream, parent, length = 0) ->
     res = @_setup stream, parent, length
