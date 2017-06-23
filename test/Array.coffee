@@ -97,3 +97,13 @@ describe 'Array', ->
       array = new ArrayT new Pointer(uint8, uint8), uint8
       array.encode(stream, [1, 2, 3, 4])
       stream.end()
+
+    it 'should encode length as amount of bytes', (done) ->
+      stream = new EncodeStream
+      stream.pipe concat (buf) ->
+        buf.should.deep.equal new Buffer [6, 0, 1, 0, 2, 0, 3]
+        done()
+
+      array = new ArrayT uint16, uint8, 'bytes'
+      array.encode(stream, [1, 2, 3])
+      stream.end()

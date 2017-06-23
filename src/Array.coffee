@@ -63,7 +63,12 @@ class ArrayT
         parent: parent
 
       ctx.pointerOffset = stream.pos + @size(array, ctx)
-      @length.encode(stream, array.length)
+
+      arrayLength = array.length
+      if @lengthType == 'bytes'
+        arrayLength *= @type.size(arrayLength, ctx)
+
+      @length.encode(stream, arrayLength)
 
     for item in array
       @type.encode(stream, item, ctx)
