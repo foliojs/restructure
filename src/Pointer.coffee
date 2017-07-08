@@ -8,6 +8,10 @@ class Pointer
     @options.nullValue ?= 0
     @options.lazy ?= false
 
+  # this.options.relativeTo may be a string of properties
+  #   'foo'
+  #   'foo.bar'
+  # this property chain will be executed against `ctx`
   relativeToGetter: (ctx) ->
     @options.relativeTo.split('.').reduce((obj, prop) ->
       obj[prop]
