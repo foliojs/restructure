@@ -2,9 +2,18 @@ Struct = require './Struct'
 
 class VersionedStruct extends Struct
   constructor: (@type, @versions = {}) ->
+
+  versionGetter: (parent) ->
     if typeof @type is 'string'
-      @versionGetter = new Function('parent', "return parent.#{@type}")
-      @versionSetter = new Function('parent', 'version', "return parent.#{@type} = version")
+      @type.split('.').reduce((obj, prop) ->
+        obj[prop]
+      , parent)
+
+  versionSetter: (parent, version) ->
+    if typeof @type is 'string'
+      @type.split('.').reduce((obj, prop) ->
+        obj[prop] = version
+      , parent)
 
   decode: (stream, parent, length = 0) ->
     res = @_setup stream, parent, length
