@@ -18,6 +18,15 @@ exports.resolveLength = (length, stream, parent) ->
     
   return res
 
+# 'chain' may be a string of properties
+#   'foo'
+#   'foo.bar'
+# this property chain will be executed against `property`
+exports.propertyChain = (property, chain) ->
+  chain.split('.').reduce((obj, prop) ->
+    obj[prop]
+  , property)
+
 class PropertyDescriptor
   constructor: (opts = {}) ->
     @enumerable = true

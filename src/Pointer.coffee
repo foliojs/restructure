@@ -13,9 +13,7 @@ class Pointer
   #   'foo.bar'
   # this property chain will be executed against `ctx`
   relativeToGetter: (ctx) ->
-    @options.relativeTo.split('.').reduce((obj, prop) ->
-      obj[prop]
-    , ctx)
+    utils.propertyChain(ctx, @options.relativeTo)
 
   decode: (stream, ctx) ->
     offset = @offsetType.decode(stream, ctx)

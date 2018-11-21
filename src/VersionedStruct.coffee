@@ -1,4 +1,5 @@
 Struct = require './Struct'
+utils = require './utils'
 
 class VersionedStruct extends Struct
   constructor: (@type, @versions = {}) ->
@@ -9,9 +10,7 @@ class VersionedStruct extends Struct
       #   'foo'
       #   'foo.bar'
       # this property chain will be executed against `parent`
-      @type.split('.').reduce((obj, prop) ->
-        obj[prop]
-      , parent)
+      utils.propertyChain(parent, @type)
 
   versionSetter: (parent, version) ->
     if typeof @type is 'string'
