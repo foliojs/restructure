@@ -5,7 +5,13 @@ class VersionedStruct extends Struct
 
   versionGetter: (parent) ->
     if typeof @type is 'string'
-      parent[@type]
+      # this.type may be a string of properties
+      #   'foo'
+      #   'foo.bar'
+      # this property chain will be executed against `parent`
+      @type.split('.').reduce((obj, prop) ->
+        obj[prop]
+      , parent)
 
   versionSetter: (parent, version) ->
     if typeof @type is 'string'
