@@ -6,7 +6,7 @@ class VersionedStruct extends Struct
   versionGetter: (parent) ->
     if typeof @type is 'string'
       @type.split('.').reduce((obj, prop) ->
-        obj[prop]
+        if typeof obj != 'undefined' then obj[prop] else undefined
       , parent)
 
   versionSetter: (parent, version) ->
