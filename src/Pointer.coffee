@@ -8,7 +8,7 @@ class Pointer
     @options.nullValue ?= 0
     @options.lazy ?= false
     if @options.relativeTo
-      @relativeToGetter = new Function('ctx', "return ctx.#{@options.relativeTo}")
+      @relativeToGetter = (ctx) => ctx[@options.relativeTo]
 
   decode: (stream, ctx) ->
     offset = @offsetType.decode(stream, ctx)
