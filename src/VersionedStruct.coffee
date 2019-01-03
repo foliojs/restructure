@@ -10,11 +10,11 @@ class VersionedStruct extends Struct
       #   'foo'
       #   'foo.bar'
       # this property chain will be executed against `parent`
-      utils.propertyChain(parent, @type)
+      utils.getPropertyChain(parent, @type)
 
   versionSetter: (parent, version) ->
     if typeof @type is 'string'
-      parent[@type] = version
+      utils.setPropertyChain(parent, @type, version)
 
   decode: (stream, parent, length = 0) ->
     res = @_setup stream, parent, length

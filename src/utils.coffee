@@ -22,10 +22,18 @@ exports.resolveLength = (length, stream, parent) ->
 #   'foo'
 #   'foo.bar'
 # this property chain will be executed against `property`
-exports.propertyChain = (property, chain) ->
+exports.getPropertyChain = (ref, chain) ->
   chain.split('.').reduce((obj, prop) ->
     obj[prop]
-  , property)
+  , ref)
+
+exports.setPropertyChain = (ref, chain, newValue) ->
+  props = chain.split('.')
+  lastProp = props.pop()
+  ref1 = props.reduce((obj, prop) ->
+    obj[prop]
+  , ref)
+  ref1[lastProp] = newValue
 
 class PropertyDescriptor
   constructor: (opts = {}) ->
