@@ -8,13 +8,11 @@
   },
   "devDependencies": {
     "chai": "~1.9.1",
-    "coffee-coverage": "~0.4.2",
-    "coffee-script": "~1.7.1",
     "concat-stream": "~1.4.5",
-    "coveralls": "^2.10.0",
+    "coveralls": "^3.0.3",
     "iconv-lite": "^0.4.7",
-    "mocha": "~1.18.2",
-    "mocha-lcov-reporter": "0.0.1"
+    "mocha": "~6.0.2",
+    "nyc": "^13.3.0"
   },
   "browserify": {
     "transform": [
@@ -23,10 +21,8 @@
   },
   "scripts": {
     "test": "mocha",
-    "cover": "mocha --require coverage.js --reporter html-cov > coverage.html",
-    "coveralls": "mocha --require coverage.js --reporter mocha-lcov-reporter | coveralls",
-    "prepublish": "coffee -c src/ index.coffee",
-    "postpublish": "rm -rf index.js src/*.js"
+    "cover": "nyc --reporter=html --reporter=text mocha",
+    "coveralls": "nyc report --reporter=text-lcov | coveralls"
   },
   "repository": {
     "type": "git",
