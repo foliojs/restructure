@@ -1,0 +1,170 @@
+/*
+ * decaffeinate suggestions:
+ * DS102: Remove unnecessary code created because of implicit returns
+ * DS205: Consider reworking code to avoid use of IIFEs
+ * DS207: Consider shorter variations of null checks
+ * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
+ */
+const utils = require('./utils');
+
+class Pointer {
+  constructor(offsetType, type, options) {
+    this.offsetType = offsetType;
+    this.type = type;
+    if (options == null) { options = {}; }
+    this.options = options;
+    if (this.type === 'void') { this.type = null; }
+    if (this.options.type == null) { this.options.type = 'local'; }
+    if (this.options.allowNull == null) { this.options.allowNull = true; }
+    if (this.options.nullValue == null) { this.options.nullValue = 0; }
+    if (this.options.lazy == null) { this.options.lazy = false; }
+    if (this.options.relativeTo) {
+      this.relativeToGetter = new Function('ctx', `return ctx.${this.options.relativeTo}`);
+    }
+  }
+
+  decode(stream, ctx) {
+    const offset = this.offsetType.decode(stream, ctx);
+
+    // handle NULL pointers
+    if ((offset === this.options.nullValue) && this.options.allowNull) {
+      return null;
+    }
+
+    let relative = (() => { switch (this.options.type) {
+      case 'local':     return ctx._startOffset;
+      case 'immediate': return stream.pos - this.offsetType.size();
+      case 'parent':    return ctx.parent._startOffset;
+      default:
+        var c = ctx;
+        while (c.parent) {
+          c = c.parent;
+        }
+
+        return c._startOffset || 0;
+    } })();
+
+    if (this.options.relativeTo) {
+      relative += this.relativeToGetter(ctx);
+    }
+
+    const ptr = offset + relative;
+
+    if (this.type != null) {
+      let val = null;
+      const decodeValue = () => {
+        if (val != null) { return val; }
+          
+        const { pos } = stream;
+        stream.pos = ptr;
+        val = this.type.decode(stream, ctx);
+        stream.pos = pos;
+        return val;
+      };
+        
+      // If this is a lazy pointer, define a getter to decode only when needed.
+      // This obviously only works when the pointer is contained by a Struct.
+      if (this.options.lazy) {
+        return new utils.PropertyDescriptor({
+          get: decodeValue});
+      }
+        
+      return decodeValue();
+    } else {
+      return ptr;
+    }
+  }
+
+  size(val, ctx) {
+    const parent = ctx;
+    switch (this.options.type) {
+      case 'local': case 'immediate':
+        break;
+      case 'parent':
+        ctx = ctx.parent;
+        break;
+      default: // global
+        while (ctx.parent) {
+          ctx = ctx.parent;
+        }
+    }
+
+    let { type } = this;
+    if (type == null) {
+      if (!(val instanceof VoidPointer)) {
+        throw new Error("Must be a VoidPointer");
+      }
+
+      ({ type } = val);
+      val = val.value;
+    }
+
+    if (val && ctx) {
+      ctx.pointerSize += type.size(val, parent);
+    }
+      
+    return this.offsetType.size();
+  }
+
+  encode(stream, val, ctx) {
+    let relative;
+    const parent = ctx;
+    if ((val == null)) {
+      this.offsetType.encode(stream, this.options.nullValue);
+      return;
+    }
+
+    switch (this.options.type) {
+      case 'local':
+        relative = ctx.startOffset;
+        break;
+      case 'immediate':
+        relative = stream.pos + this.offsetType.size(val, parent);
+        break;
+      case 'parent':
+        ctx = ctx.parent;
+        relative = ctx.startOffset;
+        break;
+      default: // global
+        relative = 0;
+        while (ctx.parent) {
+          ctx = ctx.parent;
+        }
+    }
+
+    if (this.options.relativeTo) {
+      relative += this.relativeToGetter(parent.val);
+    }
+
+    this.offsetType.encode(stream, ctx.pointerOffset - relative);
+
+    let { type } = this;
+    if (type == null) {
+      if (!(val instanceof VoidPointer)) {
+        throw new Error("Must be a VoidPointer");
+      }
+
+      ({ type } = val);
+      val = val.value;
+    }
+
+    ctx.pointers.push({
+      type,
+      val,
+      parent
+    });
+
+    return ctx.pointerOffset += type.size(val, parent);
+  }
+}
+
+// A pointer whose type is determined at decode time
+class VoidPointer {
+  constructor(type, value) {
+    this.type = type;
+    this.value = value;
+  }
+}
+
+exports.Pointer = Pointer;
+exports.VoidPointer = VoidPointer;
