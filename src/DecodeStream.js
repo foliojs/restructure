@@ -1,50 +1,14 @@
-/*
- * decaffeinate suggestions:
- * DS102: Remove unnecessary code created because of implicit returns
- * DS206: Consider reworking classes to avoid initClass
- * DS207: Consider shorter variations of null checks
- * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
- */
 let iconv;
 try { iconv = require('iconv-lite'); } catch (error) {}
 
-class DecodeStream {
-  static initClass() {
-  
-    this.TYPES = {
-      UInt8: 1,
-      UInt16: 2,
-      UInt24: 3,
-      UInt32: 4,
-      Int8: 1,
-      Int16: 2,
-      Int24: 3,
-      Int32: 4,
-      Float: 4,
-      Double: 8
-    };
-  
-    for (let key in Buffer.prototype) {
-      if (key.slice(0, 4) === 'read') {
-        (key => {
-          const bytes = this.TYPES[key.replace(/read|[BL]E/g, '')];
-          return this.prototype[key] = function() {
-            const ret = this.buffer[key](this.pos);
-            this.pos += bytes;
-            return ret;
-          };
-        })(key);
-      }
-    }
-  }
+class DecodeStream {  
   constructor(buffer) {
     this.buffer = buffer;
     this.pos = 0;
     this.length = this.buffer.length;
   }
 
-  readString(length, encoding) {
-    if (encoding == null) { encoding = 'ascii'; }
+  readString(length, encoding = 'ascii') {    
     switch (encoding) {
       case 'utf16le': case 'ucs2': case 'utf8': case 'ascii':
         return this.buffer.toString(encoding, this.pos, (this.pos += length));
@@ -93,6 +57,29 @@ class DecodeStream {
     return this.readUInt16LE() + (this.readInt8() << 16);
   }
 }
-DecodeStream.initClass();
+
+DecodeStream.TYPES = {
+  UInt8: 1,
+  UInt16: 2,
+  UInt24: 3,
+  UInt32: 4,
+  Int8: 1,
+  Int16: 2,
+  Int24: 3,
+  Int32: 4,
+  Float: 4,
+  Double: 8
+};
+
+for (let key in Buffer.prototype) {
+  if (key.slice(0, 4) === 'read') {
+    const bytes = DecodeStream.TYPES[key.replace(/read|[BL]E/g, '')];
+    DecodeStream.prototype[key] = function() {
+      const ret = this.buffer[key](this.pos);
+      this.pos += bytes;
+      return ret;
+    };
+  }
+}
 
 module.exports = DecodeStream;

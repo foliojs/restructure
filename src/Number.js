@@ -1,15 +1,8 @@
-/*
- * decaffeinate suggestions:
- * DS102: Remove unnecessary code created because of implicit returns
- * DS207: Consider shorter variations of null checks
- * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
- */
 const DecodeStream = require('./DecodeStream');
 
 class NumberT {
-  constructor(type, endian) {
-    this.type = type;
-    if (endian == null) { endian = 'BE'; }
+  constructor(type, endian = 'BE') {
+    this.type = type;    
     this.endian = endian;
     this.fn = this.type;
     if (this.type[this.type.length - 1] !== '8') {
@@ -51,8 +44,7 @@ exports.doublebe = (exports.double = new NumberT('Double', 'BE'));
 exports.doublele = new NumberT('Double', 'LE');
 
 class Fixed extends NumberT {
-  constructor(size, endian, fracBits) {
-    if (fracBits == null) { fracBits = size >> 1; }
+  constructor(size, endian, fracBits = size >> 1) {    
     super(`Int${size}`, endian);
     this._point = 1 << fracBits;
   }

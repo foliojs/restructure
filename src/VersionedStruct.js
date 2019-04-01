@@ -1,9 +1,3 @@
-/*
- * decaffeinate suggestions:
- * DS001: Remove Babel/TypeScript constructor workaround
- * DS207: Consider shorter variations of null checks
- * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
- */
 const Struct = require('./Struct');
 
 class VersionedStruct extends Struct {
@@ -47,9 +41,8 @@ class VersionedStruct extends Struct {
     return res;
   }
 
-  size(val, parent, includePointers) {
-    let key, type;
-    if (includePointers == null) { includePointers = true; }
+  size(val, parent, includePointers = true) {
+    let key, type;    
     if (!val) {
       throw new Error('Not a fixed size');
     }

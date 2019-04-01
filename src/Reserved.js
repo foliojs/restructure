@@ -1,15 +1,8 @@
-/*
- * decaffeinate suggestions:
- * DS102: Remove unnecessary code created because of implicit returns
- * DS207: Consider shorter variations of null checks
- * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
- */
 const utils = require('./utils');
 
 class Reserved {
-  constructor(type, count) {
-    this.type = type;
-    if (count == null) { count = 1; }
+  constructor(type, count = 1) {
+    this.type = type;    
     this.count = count;
   }
   decode(stream, parent) {

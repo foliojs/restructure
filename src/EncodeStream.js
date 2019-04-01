@@ -1,34 +1,10 @@
-/*
- * decaffeinate suggestions:
- * DS102: Remove unnecessary code created because of implicit returns
- * DS206: Consider reworking classes to avoid initClass
- * DS207: Consider shorter variations of null checks
- * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
- */
 let iconv;
 const stream = require('stream');
 const DecodeStream = require('./DecodeStream');
 try { iconv = require('iconv-lite'); } catch (error) {}
 
-class EncodeStream extends stream.Readable {
-  static initClass() {
-  
-    for (let key in Buffer.prototype) {
-      if (key.slice(0, 5) === 'write') {
-        (key => {
-          const bytes = +DecodeStream.TYPES[key.replace(/write|[BL]E/g, '')];
-          return EncodeStream.prototype[key] = function(value) {
-            this.ensure(bytes);
-            this.buffer[key](value, this.bufferOffset);
-            this.bufferOffset += bytes;
-            return this.pos += bytes;
-          };
-        })(key);
-      }
-    }
-  }
-  constructor(bufferSize) {
-    if (bufferSize == null) { bufferSize = 65536; }
+class EncodeStream extends stream.Readable {  
+  constructor(bufferSize =  65536) {    
     super(...arguments);
     this.buffer = new Buffer(bufferSize);
     this.bufferOffset = 0;
@@ -57,8 +33,7 @@ class EncodeStream extends stream.Readable {
     return this.pos += buffer.length;
   }
 
-  writeString(string, encoding) {
-    if (encoding == null) { encoding = 'ascii'; }
+  writeString(string, encoding = 'ascii') {    
     switch (encoding) {
       case 'utf16le': case 'ucs2': case 'utf8': case 'ascii':
         return this.writeBuffer(new Buffer(string, encoding));
@@ -134,6 +109,17 @@ class EncodeStream extends stream.Readable {
     return this.push(null);
   }
 }
-EncodeStream.initClass();
+
+for (let key in Buffer.prototype) {
+  if (key.slice(0, 5) === 'write') {
+    const bytes = +DecodeStream.TYPES[key.replace(/write|[BL]E/g, '')];
+    EncodeStream.prototype[key] = function(value) {
+      this.ensure(bytes);
+      this.buffer[key](value, this.bufferOffset);
+      this.bufferOffset += bytes;
+      return this.pos += bytes;
+    };
+  }
+}
 
 module.exports = EncodeStream;

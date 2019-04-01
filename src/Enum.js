@@ -1,13 +1,6 @@
-/*
- * decaffeinate suggestions:
- * DS102: Remove unnecessary code created because of implicit returns
- * DS207: Consider shorter variations of null checks
- * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
- */
 class Enum {
-  constructor(type, options) {
-    this.type = type;
-    if (options == null) { options = []; }
+  constructor(type, options = []) {
+    this.type = type;    
     this.options = options;
   }
   decode(stream) {

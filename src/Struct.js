@@ -1,8 +1,3 @@
-/*
- * decaffeinate suggestions:
- * DS207: Consider shorter variations of null checks
- * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
- */
 const utils = require('./utils');
 
 class Struct {
@@ -10,8 +5,7 @@ class Struct {
     this.fields = fields;
   }
 
-  decode(stream, parent, length) {
-    if (length == null) { length = 0; }
+  decode(stream, parent, length = 0) {    
     const res = this._setup(stream, parent, length);
     this._parseFields(stream, res, this.fields);
 

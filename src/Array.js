@@ -1,17 +1,10 @@
-/*
- * decaffeinate suggestions:
- * DS101: Remove unnecessary use of Array.from
- * DS207: Consider shorter variations of null checks
- * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
- */
 const {Number:NumberT} = require('./Number');
 const utils = require('./utils');
 
 class ArrayT {
-  constructor(type, length, lengthType) {
+  constructor(type, length, lengthType = 'count') {
     this.type = type;
-    this.length = length;
-    if (lengthType == null) { lengthType = 'count'; }
+    this.length = length;    
     this.lengthType = lengthType;
   }
 
@@ -70,7 +63,7 @@ class ArrayT {
       ctx = {parent: ctx};
     }
 
-    for (let item of Array.from(array)) {
+    for (let item of array) {
       size += this.type.size(item, ctx);
     }
 
@@ -90,7 +83,7 @@ class ArrayT {
       this.length.encode(stream, array.length);
     }
 
-    for (let item of Array.from(array)) {
+    for (let item of array) {
       this.type.encode(stream, item, ctx);
     }
 

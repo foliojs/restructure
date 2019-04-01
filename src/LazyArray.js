@@ -1,10 +1,3 @@
-/*
- * decaffeinate suggestions:
- * DS102: Remove unnecessary code created because of implicit returns
- * DS205: Consider reworking code to avoid use of IIFEs
- * DS207: Consider shorter variations of null checks
- * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
- */
 const ArrayT = require('./Array');
 const {Number:NumberT} = require('./Number');
 const utils = require('./utils');
@@ -73,13 +66,11 @@ class LazyArray {
   }
     
   toArray() {
-    return (() => {
-      const result = [];
-      for (let i = 0, end = this.length; i < end; i++) {
-        result.push(this.get(i));
-      }
-      return result;
-    })();
+    const result = [];
+    for (let i = 0, end = this.length; i < end; i++) {
+      result.push(this.get(i));
+    }
+    return result;    
   }
     
   inspect() {

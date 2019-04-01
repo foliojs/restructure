@@ -1,25 +1,17 @@
-/*
- * decaffeinate suggestions:
- * DS102: Remove unnecessary code created because of implicit returns
- * DS205: Consider reworking code to avoid use of IIFEs
- * DS207: Consider shorter variations of null checks
- * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
- */
 const {Number:NumberT} = require('./Number');
 const utils = require('./utils');
 
 class StringT {
-  constructor(length, encoding) {
-    this.length = length;
-    if (encoding == null) { encoding = 'ascii'; }
+  constructor(length, encoding = 'ascii') {
+    this.length = length;    
     this.encoding = encoding;
   }
 
   decode(stream, parent) {
     let length, pos;
-    length = (() => {
-      if (this.length != null) {
-      return utils.resolveLength(this.length, stream, parent);
+    
+    if (this.length != null) {
+      length = utils.resolveLength(this.length, stream, parent);
     } else {
       let buffer;
       ({buffer, length, pos} = stream);
@@ -28,9 +20,8 @@ class StringT {
         ++pos;
       }
 
-      return pos - stream.pos;
-    }
-    })();
+      length = pos - stream.pos;
+    }    
 
     let { encoding } = this;
     if (typeof encoding === 'function') {

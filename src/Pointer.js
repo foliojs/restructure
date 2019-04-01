@@ -1,17 +1,9 @@
-/*
- * decaffeinate suggestions:
- * DS102: Remove unnecessary code created because of implicit returns
- * DS205: Consider reworking code to avoid use of IIFEs
- * DS207: Consider shorter variations of null checks
- * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
- */
 const utils = require('./utils');
 
 class Pointer {
-  constructor(offsetType, type, options) {
+  constructor(offsetType, type, options = {}) {
     this.offsetType = offsetType;
-    this.type = type;
-    if (options == null) { options = {}; }
+    this.type = type;    
     this.options = options;
     if (this.type === 'void') { this.type = null; }
     if (this.options.type == null) { this.options.type = 'local'; }
@@ -31,18 +23,19 @@ class Pointer {
       return null;
     }
 
-    let relative = (() => { switch (this.options.type) {
-      case 'local':     return ctx._startOffset;
-      case 'immediate': return stream.pos - this.offsetType.size();
-      case 'parent':    return ctx.parent._startOffset;
+    let relative
+    switch (this.options.type) {
+      case 'local':     relative = ctx._startOffset; break;
+      case 'immediate': relative = stream.pos - this.offsetType.size(); break;
+      case 'parent':    relative = ctx.parent._startOffset; break;
       default:
         var c = ctx;
         while (c.parent) {
           c = c.parent;
         }
 
-        return c._startOffset || 0;
-    } })();
+        relative = c._startOffset || 0;
+    }
 
     if (this.options.relativeTo) {
       relative += this.relativeToGetter(ctx);

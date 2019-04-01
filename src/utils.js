@@ -1,8 +1,3 @@
-/*
- * decaffeinate suggestions:
- * DS207: Consider shorter variations of null checks
- * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
- */
 const {Number:NumberT} = require('./Number');
 
 exports.resolveLength = function(length, stream, parent) {
@@ -28,8 +23,7 @@ exports.resolveLength = function(length, stream, parent) {
 };
 
 class PropertyDescriptor {
-  constructor(opts) {
-    if (opts == null) { opts = {}; }
+  constructor(opts = {}) {    
     this.enumerable = true;
     this.configurable = true;
     
