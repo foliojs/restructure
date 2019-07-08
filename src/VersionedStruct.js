@@ -1,4 +1,5 @@
 const Struct = require('./Struct');
+const utils = require('./utils');
 
 class VersionedStruct extends Struct {
   constructor(type, versions = {}) {
@@ -9,6 +10,22 @@ class VersionedStruct extends Struct {
       this.versionGetter = new Function('parent', `return parent.${this.type}`);
       this.versionSetter = new Function('parent', 'version', `return parent.${this.type} = version`);
     }
+  }
+
+  versionGetter(parent) {
+    if (typeof this.type === 'string') {
+      // this.type may be a string of properties
+      //   'foo'
+      //   'foo.bar'
+      // this property chain will be executed against `parent`
+      return utils.getPropertyChain(parent, this.type);
+    } else {
+      return null;
+    }
+  }
+
+  versionSetter(parent, version) {
+    return utils.setPropertyChain(parent, this.type, version);
   }
 
   decode(stream, parent, length = 0) {    
