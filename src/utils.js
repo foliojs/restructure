@@ -25,7 +25,7 @@ exports.resolveLength = function(length, stream, parent) {
 // 'chain' may be a string of properties
 //   'foo'
 //   'foo.bar'
-// this property chain will be executed against `property`
+// this property chain will be executed against `ref`
 exports.getPropertyChain = function(ref, chain) {
   return chain.split('.').reduce(function(obj, prop) {
     return obj[prop];
