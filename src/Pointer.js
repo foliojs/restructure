@@ -10,9 +10,14 @@ class Pointer {
     if (this.options.allowNull == null) { this.options.allowNull = true; }
     if (this.options.nullValue == null) { this.options.nullValue = 0; }
     if (this.options.lazy == null) { this.options.lazy = false; }
-    if (this.options.relativeTo) {
-      this.relativeToGetter = new Function('ctx', `return ctx.${this.options.relativeTo}`);
-    }
+  }
+
+  // this.options.relativeTo may be a string of properties
+  //   'foo'
+  //   'foo.bar'
+  // this property chain will be executed against `ctx`
+  relativeToGetter(ctx) {
+    return utils.getPropertyChain(ctx, this.options.relativeTo);
   }
 
   decode(stream, ctx) {

@@ -22,6 +22,26 @@ exports.resolveLength = function(length, stream, parent) {
   return res;
 };
 
+// 'chain' may be a string of properties
+//   'foo'
+//   'foo.bar'
+// this property chain will be executed against `property`
+exports.getPropertyChain = function(ref, chain) {
+  return chain.split('.').reduce(function(obj, prop) {
+    return obj[prop];
+  }, ref);
+}
+
+exports.setPropertyChain = function(ref, chain, newValue) {
+  let props = chain.split('.');
+  let lastProp = props.pop();
+  let ref1 = props.reduce(function(obj, prop) {
+    return obj[prop];
+  }, ref);
+  ref1[lastProp] = newValue;
+  return newValue;
+}
+
 class PropertyDescriptor {
   constructor(opts = {}) {    
     this.enumerable = true;
