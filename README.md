@@ -273,7 +273,7 @@ The `type` option has these possible values:
 * `parent` - the encoded offset is relative to the parent structure of the immediate container
 * `global` - the encoded offset is global to the start of the file
 
-The `relativeTo` option specifies that the encoded offset is relative to a field on the containing structure.
+The `relativeTo` option accepts a function callback that should return the field on the containing structure which the encoded offset is relative to. The callback is called with the context as parameter.
 By default, pointers are relative to the start of the containing structure (`local`).
 
 The `allowNull` option lets you specify whether zero offsets are allowed or should produce `null`. This is
