@@ -3,9 +3,6 @@
   "version": "1.0.0",
   "description": "Declaratively encode and decode binary data",
   "main": "index.js",
-  "dependencies": {
-    "browserify-optional": "^1.0.0"
-  },
   "devDependencies": {
     "chai": "~1.9.1",
     "concat-stream": "~1.4.5",
@@ -13,11 +10,6 @@
     "iconv-lite": "^0.4.7",
     "mocha": "~6.0.2",
     "nyc": "^13.3.0"
-  },
-  "browserify": {
-    "transform": [
-      "browserify-optional"
-    ]
   },
   "scripts": {
     "test": "mocha",
