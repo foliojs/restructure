@@ -38,8 +38,12 @@ describe('Pointer', function() {
 
     it('should support offsets relative to a property on the parent', function() {
       const stream = new DecodeStream(new Buffer([1, 0, 0, 0, 0, 53]));
-      const pointer = new Pointer(uint8, uint8, {relativeTo: 'parent.ptr'});
+      const pointer = new Pointer(uint8, uint8, {relativeTo: ctx => ctx.parent.ptr});
       return pointer.decode(stream, {_startOffset: 0, parent: {ptr: 4}}).should.equal(53);
+    });
+
+    it('should throw when passing a non function relativeTo option', function() {
+      return should.throw(() => new Pointer(uint8, uint8, {relativeTo: 'parent.ptr'}));
     });
 
     it('should support returning pointer if there is no decode type', function() {
@@ -272,7 +276,7 @@ describe('Pointer', function() {
       })
       );
 
-      const ptr = new Pointer(uint8, uint8, {relativeTo: 'ptr'});
+      const ptr = new Pointer(uint8, uint8, {relativeTo: ctx => ctx.ptr});
       const ctx = {
         pointerSize: 0,
         startOffset: 0,

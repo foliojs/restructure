@@ -11,7 +11,10 @@ class Pointer {
     if (this.options.nullValue == null) { this.options.nullValue = 0; }
     if (this.options.lazy == null) { this.options.lazy = false; }
     if (this.options.relativeTo) {
-      this.relativeToGetter = new Function('ctx', `return ctx.${this.options.relativeTo}`);
+      if (typeof this.options.relativeTo !== 'function') {
+        throw new Error('relativeTo option must be a function');
+      }
+      this.relativeToGetter = options.relativeTo;
     }
   }
 
