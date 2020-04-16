@@ -3,15 +3,19 @@ const Struct = require('./Struct');
 class VersionedStruct extends Struct {
   constructor(type, versions = {}) {
     super();
-    this.type = type;    
+    this.type = type;
     this.versions = versions;
     if (typeof this.type === 'string') {
-      this.versionGetter = new Function('parent', `return parent.${this.type}`);
-      this.versionSetter = new Function('parent', 'version', `return parent.${this.type} = version`);
+      this.versionGetter = parent => {
+        return parent[this.type];
+      };
+      this.versionSetter = (parent, version) => {
+        parent[this.type] = version;
+      };
     }
   }
 
-  decode(stream, parent, length = 0) {    
+  decode(stream, parent, length = 0) {
     const res = this._setup(stream, parent, length);
 
     if (typeof this.type === 'string') {
@@ -42,11 +46,11 @@ class VersionedStruct extends Struct {
   }
 
   size(val, parent, includePointers = true) {
-    let key, type;    
+    let key, type;
     if (!val) {
       throw new Error('Not a fixed size');
     }
-    
+
     const ctx = {
       parent,
       val,
