@@ -6,7 +6,7 @@ exports.resolveLength = function(length, stream, parent) {
     res = length;
 
   } else if (typeof length === 'function') {
-    res = length.call(parent, parent);      
+    res = length.call(parent, parent);
 
   } else if (parent && (typeof length === 'string')) {
     res = parent[length];
@@ -18,15 +18,15 @@ exports.resolveLength = function(length, stream, parent) {
   if (isNaN(res)) {
     throw new Error('Not a fixed size');
   }
-    
+
   return res;
 };
 
 class PropertyDescriptor {
-  constructor(opts = {}) {    
+  constructor(opts = {}) {
     this.enumerable = true;
     this.configurable = true;
-    
+
     for (let key in opts) {
       const val = opts[key];
       this[key] = val;

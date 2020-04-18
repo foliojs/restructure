@@ -2,7 +2,7 @@ const DecodeStream = require('./DecodeStream');
 
 class NumberT {
   constructor(type, endian = 'BE') {
-    this.type = type;    
+    this.type = type;
     this.endian = endian;
     this.fn = this.type;
     if (this.type[this.type.length - 1] !== '8') {
@@ -44,7 +44,7 @@ exports.doublebe = (exports.double = new NumberT('Double', 'BE'));
 exports.doublele = new NumberT('Double', 'LE');
 
 class Fixed extends NumberT {
-  constructor(size, endian, fracBits = size >> 1) {    
+  constructor(size, endian, fracBits = size >> 1) {
     super(`Int${size}`, endian);
     this._point = 1 << fracBits;
   }

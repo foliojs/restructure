@@ -210,8 +210,8 @@ var arr = new r.Array(r.uint16, 6, 'bytes');
 
 ### LazyArray
 
-The `LazyArray` type extends from the `Array` type, and is useful for large arrays that you do not need to access sequentially. 
-It avoids decoding the entire array upfront, and instead only decodes and caches individual items as needed. It only works when 
+The `LazyArray` type extends from the `Array` type, and is useful for large arrays that you do not need to access sequentially.
+It avoids decoding the entire array upfront, and instead only decodes and caches individual items as needed. It only works when
 the elements inside the array have a fixed size.
 
 Instead of returning a JavaScript array, the `LazyArray` type returns a custom object that can be used to access the elements.
@@ -265,7 +265,7 @@ var Person = new r.VersionedStruct(r.uint8, {
 ### Pointer
 
 Pointers map an address or offset encoded as a number, to a value encoded elsewhere in the buffer.
-There are a few options you can use: `type`, `relativeTo`, `allowNull`, and `nullValue`. 
+There are a few options you can use: `type`, `relativeTo`, `allowNull`, and `nullValue`.
 The `type` option has these possible values:
 
 * `local` (default) - the encoded offset is relative to the start of the containing structure

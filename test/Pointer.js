@@ -51,12 +51,12 @@ describe('Pointer', function() {
       const pointer = new Pointer(uint8, 'void');
       return pointer.decode(stream, {_startOffset: 0}).should.equal(4);
     });
-      
+
     return it('should support decoding pointers lazily', function() {
       const stream = new DecodeStream(new Buffer([1, 53]));
       const struct = new Struct({
         ptr: new Pointer(uint8, uint8, {lazy: true})});
-        
+
       const res = struct.decode(stream);
       Object.getOwnPropertyDescriptor(res, 'ptr').get.should.be.a('function');
       Object.getOwnPropertyDescriptor(res, 'ptr').enumerable.should.equal(true);
@@ -105,7 +105,7 @@ describe('Pointer', function() {
       const ctx = {pointerSize: 0};
       return should.throw(() => pointer.size(30, ctx).should.equal(1));
     });
-        
+
     return it('should return a fixed size without a value', function() {
       const pointer = new Pointer(uint8, uint8);
       return pointer.size().should.equal(1);

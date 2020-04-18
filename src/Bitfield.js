@@ -1,6 +1,6 @@
 class Bitfield {
   constructor(type, flags = []) {
-    this.type = type;    
+    this.type = type;
     this.flags = flags;
   }
   decode(stream) {

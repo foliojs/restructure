@@ -299,7 +299,7 @@ describe('VersionedStruct', function() {
 
       return size.should.equal(15);
     });
-    
+
     return it('should throw if no value is given', function() {
       const struct = new VersionedStruct(uint8, {
         0: {

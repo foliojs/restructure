@@ -75,7 +75,7 @@ describe('Array', function() {
       const array = new ArrayT(uint8, uint8);
       return array.size([1, 2, 3, 4]).should.equal(5);
     });
-      
+
     return it('should use defined length if no value given', function() {
       const array = new ArrayT(uint8, 10);
       return array.size().should.equal(10);

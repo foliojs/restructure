@@ -1,11 +1,11 @@
 const utils = require('./utils');
 
 class Struct {
-  constructor(fields = {}) {    
+  constructor(fields = {}) {
     this.fields = fields;
   }
 
-  decode(stream, parent, length = 0) {    
+  decode(stream, parent, length = 0) {
     const res = this._setup(stream, parent, length);
     this._parseFields(stream, res, this.fields);
 
@@ -38,7 +38,7 @@ class Struct {
       } else {
         val = type.decode(stream, res);
       }
-        
+
       if (val !== undefined) {
         if (val instanceof utils.PropertyDescriptor) {
           Object.defineProperty(res, key, val);

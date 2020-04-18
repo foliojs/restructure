@@ -2,7 +2,7 @@ const utils = require('./utils');
 
 class Reserved {
   constructor(type, count = 1) {
-    this.type = type;    
+    this.type = type;
     this.count = count;
   }
   decode(stream, parent) {

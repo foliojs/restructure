@@ -14,7 +14,7 @@ class BufferT {
     if (!val) {
       return utils.resolveLength(this.length, null, parent);
     }
-      
+
     return val.length;
   }
 
@@ -22,7 +22,7 @@ class BufferT {
     if (this.length instanceof NumberT) {
       this.length.encode(stream, buf.length);
     }
-    
+
     return stream.writeBuffer(buf);
   }
 }

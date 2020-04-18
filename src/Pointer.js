@@ -3,7 +3,7 @@ const utils = require('./utils');
 class Pointer {
   constructor(offsetType, type, options = {}) {
     this.offsetType = offsetType;
-    this.type = type;    
+    this.type = type;
     this.options = options;
     if (this.type === 'void') { this.type = null; }
     if (this.options.type == null) { this.options.type = 'local'; }
@@ -50,21 +50,21 @@ class Pointer {
       let val = null;
       const decodeValue = () => {
         if (val != null) { return val; }
-          
+
         const { pos } = stream;
         stream.pos = ptr;
         val = this.type.decode(stream, ctx);
         stream.pos = pos;
         return val;
       };
-        
+
       // If this is a lazy pointer, define a getter to decode only when needed.
       // This obviously only works when the pointer is contained by a Struct.
       if (this.options.lazy) {
         return new utils.PropertyDescriptor({
           get: decodeValue});
       }
-        
+
       return decodeValue();
     } else {
       return ptr;
@@ -98,7 +98,7 @@ class Pointer {
     if (val && ctx) {
       ctx.pointerSize += type.size(val, parent);
     }
-      
+
     return this.offsetType.size();
   }
 

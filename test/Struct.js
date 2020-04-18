@@ -76,7 +76,7 @@ describe('Struct', function() {
 
       return size.should.equal(14);
     });
-      
+
     it('should get the correct size when no value is given', function() {
       const struct = new Struct({
         name: new StringT(4),
@@ -85,7 +85,7 @@ describe('Struct', function() {
 
       return struct.size().should.equal(5);
     });
-      
+
     return it('should throw when getting non-fixed length size and no value is given', function() {
       const struct = new Struct({
         name: new StringT(uint8),
@@ -96,7 +96,7 @@ describe('Struct', function() {
       , /not a fixed size/i);
     });
   });
-      
+
   return describe('encode', function() {
     it('should encode objects to buffers', function(done) {
       const stream = new EncodeStream;

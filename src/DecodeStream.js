@@ -1,14 +1,14 @@
 let iconv;
 try { iconv = require('iconv-lite'); } catch (error) {}
 
-class DecodeStream {  
+class DecodeStream {
   constructor(buffer) {
     this.buffer = buffer;
     this.pos = 0;
     this.length = this.buffer.length;
   }
 
-  readString(length, encoding = 'ascii') {    
+  readString(length, encoding = 'ascii') {
     switch (encoding) {
       case 'utf16le': case 'ucs2': case 'utf8': case 'ascii':
         return this.buffer.toString(encoding, this.pos, (this.pos += length));

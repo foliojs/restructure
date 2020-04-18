@@ -1,6 +1,6 @@
 class Enum {
   constructor(type, options = []) {
-    this.type = type;    
+    this.type = type;
     this.options = options;
   }
   decode(stream) {

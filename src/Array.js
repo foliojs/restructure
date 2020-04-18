@@ -4,7 +4,7 @@ const utils = require('./utils');
 class ArrayT {
   constructor(type, length, lengthType = 'count') {
     this.type = type;
-    this.length = length;    
+    this.length = length;
     this.lengthType = lengthType;
   }
 
@@ -14,7 +14,7 @@ class ArrayT {
 
     const res = [];
     let ctx = parent;
-    
+
     if (this.length != null) {
       length = utils.resolveLength(this.length, stream, parent);
     }

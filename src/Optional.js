@@ -1,6 +1,6 @@
 class Optional {
   constructor(type, condition = true) {
-    this.type = type;    
+    this.type = type;
     this.condition = condition;
   }
 

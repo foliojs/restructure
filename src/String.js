@@ -3,13 +3,13 @@ const utils = require('./utils');
 
 class StringT {
   constructor(length, encoding = 'ascii') {
-    this.length = length;    
+    this.length = length;
     this.encoding = encoding;
   }
 
   decode(stream, parent) {
     let length, pos;
-    
+
     if (this.length != null) {
       length = utils.resolveLength(this.length, stream, parent);
     } else {
@@ -21,7 +21,7 @@ class StringT {
       }
 
       length = pos - stream.pos;
-    }    
+    }
 
     let { encoding } = this;
     if (typeof encoding === 'function') {
@@ -36,13 +36,13 @@ class StringT {
 
     return string;
   }
-    
+
   size(val, parent) {
     // Use the defined value if no value was given
     if (!val) {
       return utils.resolveLength(this.length, null, parent);
     }
-    
+
     let { encoding } = this;
     if (typeof encoding === 'function') {
       encoding = encoding.call(parent != null ? parent.val : undefined, parent != null ? parent.val : undefined) || 'ascii';

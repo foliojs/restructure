@@ -18,7 +18,7 @@ describe('Buffer', function() {
       return buf.decode(stream, {len: 1}).should.deep.equal(new Buffer([0xb6]));
   });
 });
-      
+
   describe('size', function() {
     it('should return size', function() {
       const buf = new BufferT(2);

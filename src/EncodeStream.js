@@ -3,23 +3,23 @@ const stream = require('stream');
 const DecodeStream = require('./DecodeStream');
 try { iconv = require('iconv-lite'); } catch (error) {}
 
-class EncodeStream extends stream.Readable {  
-  constructor(bufferSize =  65536) {    
+class EncodeStream extends stream.Readable {
+  constructor(bufferSize =  65536) {
     super(...arguments);
     this.buffer = new Buffer(bufferSize);
     this.bufferOffset = 0;
     this.pos = 0;
   }
 
+  // do nothing, required by node
   _read() {}
-    // do nothing, required by node
 
   ensure(bytes) {
     if ((this.bufferOffset + bytes) > this.buffer.length) {
       return this.flush();
     }
   }
-      
+
   flush() {
     if (this.bufferOffset > 0) {
       this.push(new Buffer(this.buffer.slice(0, this.bufferOffset)));
@@ -33,7 +33,7 @@ class EncodeStream extends stream.Readable {
     return this.pos += buffer.length;
   }
 
-  writeString(string, encoding = 'ascii') {    
+  writeString(string, encoding = 'ascii') {
     switch (encoding) {
       case 'utf16le': case 'ucs2': case 'utf8': case 'ascii':
         return this.writeBuffer(new Buffer(string, encoding));

@@ -78,13 +78,13 @@ describe('String', function() {
       const string = new StringT(null, 'utf8');
       return string.size('🍻').should.equal(5);
     });
-      
+
     return it('should use defined length if no value given', function() {
       const array = new StringT(10);
       return array.size().should.equal(10);
     });
   });
-      
+
   return describe('encode', function() {
     it('should encode using string length', function(done) {
       const stream = new EncodeStream;
