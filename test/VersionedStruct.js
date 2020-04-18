@@ -18,14 +18,14 @@ describe('VersionedStruct', function() {
       }
       );
 
-      let stream = new DecodeStream(new Buffer('\x00\x05devon\x15'));
+      let stream = new DecodeStream(Buffer.from('\x00\x05devon\x15'));
       struct.decode(stream).should.deep.equal({
         version: 0,
         name: 'devon',
         age: 21
       });
 
-      stream = new DecodeStream(new Buffer('\x01\x0adevon 👍\x15\x00', 'utf8'));
+      stream = new DecodeStream(Buffer.from('\x01\x0adevon 👍\x15\x00', 'utf8'));
       return struct.decode(stream).should.deep.equal({
         version: 1,
         name: 'devon 👍',
@@ -48,7 +48,7 @@ describe('VersionedStruct', function() {
       }
       );
 
-      const stream = new DecodeStream(new Buffer('\x05\x05devon\x15'));
+      const stream = new DecodeStream(Buffer.from('\x05\x05devon\x15'));
       return should.throw(() => struct.decode(stream));
     });
 
@@ -68,7 +68,7 @@ describe('VersionedStruct', function() {
       }
       );
 
-      let stream = new DecodeStream(new Buffer('\x00\x15\x01\x05devon'));
+      let stream = new DecodeStream(Buffer.from('\x00\x15\x01\x05devon'));
       struct.decode(stream).should.deep.equal({
         version: 0,
         age: 21,
@@ -76,7 +76,7 @@ describe('VersionedStruct', function() {
         name: 'devon'
       });
 
-      stream = new DecodeStream(new Buffer('\x01\x15\x01\x0adevon 👍\x00', 'utf8'));
+      stream = new DecodeStream(Buffer.from('\x01\x15\x01\x0adevon 👍\x00', 'utf8'));
       return struct.decode(stream).should.deep.equal({
         version: 1,
         age: 21,
@@ -100,14 +100,14 @@ describe('VersionedStruct', function() {
       }
       );
 
-      let stream = new DecodeStream(new Buffer('\x05devon\x15'));
+      let stream = new DecodeStream(Buffer.from('\x05devon\x15'));
       struct.decode(stream, {version: 0}).should.deep.equal({
         version: 0,
         name: 'devon',
         age: 21
       });
 
-      stream = new DecodeStream(new Buffer('\x0adevon 👍\x15\x00', 'utf8'));
+      stream = new DecodeStream(Buffer.from('\x0adevon 👍\x15\x00', 'utf8'));
       return struct.decode(stream, {version: 1}).should.deep.equal({
         version: 1,
         name: 'devon 👍',
@@ -135,20 +135,20 @@ describe('VersionedStruct', function() {
       }
       );
 
-      let stream = new DecodeStream(new Buffer('\x00\x05devon\x15'));
+      let stream = new DecodeStream(Buffer.from('\x00\x05devon\x15'));
       struct.decode(stream, {version: 0}).should.deep.equal({
         version: 0,
         name: 'devon',
         age: 21
       });
 
-      stream = new DecodeStream(new Buffer('\x01\x00\x05pasta'));
+      stream = new DecodeStream(Buffer.from('\x01\x00\x05pasta'));
       struct.decode(stream, {version: 0}).should.deep.equal({
         version: 0,
         name: 'pasta'
       });
 
-      stream = new DecodeStream(new Buffer('\x01\x01\x09ice cream\x01'));
+      stream = new DecodeStream(Buffer.from('\x01\x01\x09ice cream\x01'));
       return struct.decode(stream, {version: 0}).should.deep.equal({
         version: 1,
         name: 'ice cream',
@@ -174,7 +174,7 @@ describe('VersionedStruct', function() {
         return this.processed = true;
       };
 
-      const stream = new DecodeStream(new Buffer('\x00\x05devon\x15'));
+      const stream = new DecodeStream(Buffer.from('\x00\x05devon\x15'));
       return struct.decode(stream).should.deep.equal({
         version: 0,
         name: 'devon',
@@ -336,7 +336,7 @@ describe('VersionedStruct', function() {
 
       const stream = new EncodeStream;
       stream.pipe(concat(function(buf) {
-        buf.should.deep.equal(new Buffer('\x00\x05devon\x15\x01\x0adevon 👍\x15\x00', 'utf8'));
+        buf.should.deep.equal(Buffer.from('\x00\x05devon\x15\x01\x0adevon 👍\x15\x00', 'utf8'));
         return done();
       })
       );
@@ -402,7 +402,7 @@ describe('VersionedStruct', function() {
 
       const stream = new EncodeStream;
       stream.pipe(concat(function(buf) {
-        buf.should.deep.equal(new Buffer('\x00\x15\x01\x05devon\x01\x15\x01\x0adevon 👍\x00', 'utf8'));
+        buf.should.deep.equal(Buffer.from('\x00\x15\x01\x05devon\x01\x15\x01\x0adevon 👍\x00', 'utf8'));
         return done();
       })
       );
@@ -443,7 +443,7 @@ describe('VersionedStruct', function() {
 
       const stream = new EncodeStream;
       stream.pipe(concat(function(buf) {
-        buf.should.deep.equal(new Buffer('\x01\x05devon\x15\x09\x05hello', 'utf8'));
+        buf.should.deep.equal(Buffer.from('\x01\x05devon\x15\x09\x05hello', 'utf8'));
         return done();
       })
       );
@@ -479,7 +479,7 @@ describe('VersionedStruct', function() {
 
       const stream = new EncodeStream;
       stream.pipe(concat(function(buf) {
-        buf.should.deep.equal(new Buffer('\x00\x05devon\x15\x01\x0adevon 👍\x15\x00', 'utf8'));
+        buf.should.deep.equal(Buffer.from('\x00\x05devon\x15\x01\x0adevon 👍\x15\x00', 'utf8'));
         return done();
       })
       );

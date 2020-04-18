@@ -16,7 +16,7 @@ describe('Bitfield', function() {
   it('should have the right size', () => bitfield.size().should.equal(1));
 
   it('should decode', function() {
-    const stream = new DecodeStream(new Buffer([JACK | MACK | PACK | NACK | QUACK]));
+    const stream = new DecodeStream(Buffer.from([JACK | MACK | PACK | NACK | QUACK]));
     return bitfield.decode(stream).should.deep.equal({
       Jack: true, Kack: false, Lack: false, Mack: true, Nack: true, Oack: false, Pack: true, Quack: true});
   });
@@ -24,7 +24,7 @@ describe('Bitfield', function() {
   return it('should encode', function(done) {
     const stream = new EncodeStream;
     stream.pipe(concat(function(buf) {
-      buf.should.deep.equal(new Buffer([JACK | MACK | PACK | NACK | QUACK]));
+      buf.should.deep.equal(Buffer.from([JACK | MACK | PACK | NACK | QUACK]));
       return done();
     })
     );

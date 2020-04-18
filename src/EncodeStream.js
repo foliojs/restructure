@@ -6,7 +6,7 @@ try { iconv = require('iconv-lite'); } catch (error) {}
 class EncodeStream extends stream.Readable {
   constructor(bufferSize =  65536) {
     super(...arguments);
-    this.buffer = new Buffer(bufferSize);
+    this.buffer = Buffer.alloc(bufferSize);
     this.bufferOffset = 0;
     this.pos = 0;
   }
@@ -22,7 +22,7 @@ class EncodeStream extends stream.Readable {
 
   flush() {
     if (this.bufferOffset > 0) {
-      this.push(new Buffer(this.buffer.slice(0, this.bufferOffset)));
+      this.push(Buffer.from(this.buffer.slice(0, this.bufferOffset)));
       return this.bufferOffset = 0;
     }
   }
@@ -36,10 +36,10 @@ class EncodeStream extends stream.Readable {
   writeString(string, encoding = 'ascii') {
     switch (encoding) {
       case 'utf16le': case 'ucs2': case 'utf8': case 'ascii':
-        return this.writeBuffer(new Buffer(string, encoding));
+        return this.writeBuffer(Buffer.from(string, encoding));
 
       case 'utf16be':
-        var buf = new Buffer(string, 'utf16le');
+        var buf = Buffer.from(string, 'utf16le');
 
         // swap the bytes
         for (let i = 0, end = buf.length - 1; i < end; i += 2) {
@@ -98,7 +98,7 @@ class EncodeStream extends stream.Readable {
       this.bufferOffset += length;
       return this.pos += length;
     } else {
-      const buf = new Buffer(length);
+      const buf = Buffer.alloc(length);
       buf.fill(val);
       return this.writeBuffer(buf);
     }

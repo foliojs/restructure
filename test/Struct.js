@@ -5,7 +5,7 @@ const concat = require('concat-stream');
 describe('Struct', function() {
   describe('decode', function() {
     it('should decode into an object', function() {
-      const stream = new DecodeStream(new Buffer('\x05devon\x15'));
+      const stream = new DecodeStream(Buffer.from('\x05devon\x15'));
       const struct = new Struct({
         name: new StringT(uint8),
         age: uint8
@@ -18,7 +18,7 @@ describe('Struct', function() {
     });
 
     it('should support process hook', function() {
-      const stream = new DecodeStream(new Buffer('\x05devon\x20'));
+      const stream = new DecodeStream(Buffer.from('\x05devon\x20'));
       const struct = new Struct({
         name: new StringT(uint8),
         age: uint8
@@ -36,7 +36,7 @@ describe('Struct', function() {
     });
 
     return it('should support function keys', function() {
-      const stream = new DecodeStream(new Buffer('\x05devon\x20'));
+      const stream = new DecodeStream(Buffer.from('\x05devon\x20'));
       const struct = new Struct({
         name: new StringT(uint8),
         age: uint8,
@@ -101,7 +101,7 @@ describe('Struct', function() {
     it('should encode objects to buffers', function(done) {
       const stream = new EncodeStream;
       stream.pipe(concat(function(buf) {
-        buf.should.deep.equal(new Buffer('\x05devon\x15'));
+        buf.should.deep.equal(Buffer.from('\x05devon\x15'));
         return done();
       })
       );
@@ -123,7 +123,7 @@ describe('Struct', function() {
     it('should support preEncode hook', function(done) {
       const stream = new EncodeStream;
       stream.pipe(concat(function(buf) {
-        buf.should.deep.equal(new Buffer('\x05devon\x15'));
+        buf.should.deep.equal(Buffer.from('\x05devon\x15'));
         return done();
       })
       );
@@ -150,7 +150,7 @@ describe('Struct', function() {
     return it('should encode pointer data after structure', function(done) {
       const stream = new EncodeStream;
       stream.pipe(concat(function(buf) {
-        buf.should.deep.equal(new Buffer('\x05devon\x15\x08\x05hello'));
+        buf.should.deep.equal(Buffer.from('\x05devon\x15\x08\x05hello'));
         return done();
       })
       );

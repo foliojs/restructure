@@ -7,7 +7,7 @@ describe('Enum', function() {
   it('should have the right size', () => e.size().should.equal(1));
 
   it('should decode', function() {
-    const stream = new DecodeStream(new Buffer([1, 2, 0]));
+    const stream = new DecodeStream(Buffer.from([1, 2, 0]));
     e.decode(stream).should.equal('bar');
     e.decode(stream).should.equal('baz');
     return e.decode(stream).should.equal('foo');
@@ -16,7 +16,7 @@ describe('Enum', function() {
   it('should encode', function(done) {
     const stream = new EncodeStream;
     stream.pipe(concat(function(buf) {
-      buf.should.deep.equal(new Buffer([1, 2, 0]));
+      buf.should.deep.equal(Buffer.from([1, 2, 0]));
       return done();
     })
     );

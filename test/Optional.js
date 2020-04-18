@@ -5,35 +5,35 @@ const concat = require('concat-stream');
 describe('Optional', function() {
   describe('decode', function() {
     it('should not decode when condition is falsy', function() {
-      const stream = new DecodeStream(new Buffer([0]));
+      const stream = new DecodeStream(Buffer.from([0]));
       const optional = new Optional(uint8, false);
       should.not.exist(optional.decode(stream));
       return stream.pos.should.equal(0);
     });
 
     it('should not decode when condition is a function and falsy', function() {
-      const stream = new DecodeStream(new Buffer([0]));
+      const stream = new DecodeStream(Buffer.from([0]));
       const optional = new Optional(uint8, function() { return false; });
       should.not.exist(optional.decode(stream));
       return stream.pos.should.equal(0);
     });
 
     it('should decode when condition is omitted', function() {
-      const stream = new DecodeStream(new Buffer([0]));
+      const stream = new DecodeStream(Buffer.from([0]));
       const optional = new Optional(uint8);
       should.exist(optional.decode(stream));
       return stream.pos.should.equal(1);
     });
 
     it('should decode when condition is truthy', function() {
-      const stream = new DecodeStream(new Buffer([0]));
+      const stream = new DecodeStream(Buffer.from([0]));
       const optional = new Optional(uint8, true);
       should.exist(optional.decode(stream));
       return stream.pos.should.equal(1);
     });
 
     return it('should decode when condition is a function and truthy', function() {
-      const stream = new DecodeStream(new Buffer([0]));
+      const stream = new DecodeStream(Buffer.from([0]));
       const optional = new Optional(uint8, function() { return true; });
       should.exist(optional.decode(stream));
       return stream.pos.should.equal(1);
@@ -42,31 +42,31 @@ describe('Optional', function() {
 
   describe('size', function() {
     it('should return 0 when condition is falsy', function() {
-      const stream = new DecodeStream(new Buffer([0]));
+      const stream = new DecodeStream(Buffer.from([0]));
       const optional = new Optional(uint8, false);
       return optional.size().should.equal(0);
     });
 
     it('should return 0 when condition is a function and falsy', function() {
-      const stream = new DecodeStream(new Buffer([0]));
+      const stream = new DecodeStream(Buffer.from([0]));
       const optional = new Optional(uint8, function() { return false; });
       return optional.size().should.equal(0);
     });
 
     it('should return given type size when condition is omitted', function() {
-      const stream = new DecodeStream(new Buffer([0]));
+      const stream = new DecodeStream(Buffer.from([0]));
       const optional = new Optional(uint8);
       return optional.size().should.equal(1);
     });
 
     it('should return given type size when condition is truthy', function() {
-      const stream = new DecodeStream(new Buffer([0]));
+      const stream = new DecodeStream(Buffer.from([0]));
       const optional = new Optional(uint8, true);
       return optional.size().should.equal(1);
     });
 
     return it('should return given type size when condition is a function and truthy', function() {
-      const stream = new DecodeStream(new Buffer([0]));
+      const stream = new DecodeStream(Buffer.from([0]));
       const optional = new Optional(uint8, function() { return true; });
       return optional.size().should.equal(1);
     });
@@ -103,7 +103,7 @@ describe('Optional', function() {
       const stream = new EncodeStream;
       const optional = new Optional(uint8);
       stream.pipe(concat(function(buf) {
-        buf.should.deep.equal(new Buffer([128]));
+        buf.should.deep.equal(Buffer.from([128]));
         return done();
       })
       );
@@ -116,7 +116,7 @@ describe('Optional', function() {
       const stream = new EncodeStream;
       const optional = new Optional(uint8, true);
       stream.pipe(concat(function(buf) {
-        buf.should.deep.equal(new Buffer([128]));
+        buf.should.deep.equal(Buffer.from([128]));
         return done();
       })
       );
@@ -129,7 +129,7 @@ describe('Optional', function() {
       const stream = new EncodeStream;
       const optional = new Optional(uint8, function() { return true; });
       stream.pipe(concat(function(buf) {
-        buf.should.deep.equal(new Buffer([128]));
+        buf.should.deep.equal(Buffer.from([128]));
         return done();
       })
       );

@@ -14,7 +14,7 @@ class DecodeStream {
         return this.buffer.toString(encoding, this.pos, (this.pos += length));
 
       case 'utf16be':
-        var buf = new Buffer(this.readBuffer(length));
+        var buf = Buffer.from(this.readBuffer(length));
 
         // swap the bytes
         for (let i = 0, end = buf.length - 1; i < end; i += 2) {

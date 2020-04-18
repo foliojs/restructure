@@ -5,7 +5,7 @@ const concat = require('concat-stream');
 describe('LazyArray', function() {
   describe('decode', function() {
     it('should decode items lazily', function() {
-      const stream = new DecodeStream(new Buffer([1, 2, 3, 4, 5]));
+      const stream = new DecodeStream(Buffer.from([1, 2, 3, 4, 5]));
       const array = new LazyArray(uint8, 4);
 
       const arr = array.decode(stream);
@@ -23,7 +23,7 @@ describe('LazyArray', function() {
     });
 
     it('should be able to convert to an array', function() {
-      const stream = new DecodeStream(new Buffer([1, 2, 3, 4, 5]));
+      const stream = new DecodeStream(Buffer.from([1, 2, 3, 4, 5]));
       const array = new LazyArray(uint8, 4);
 
       const arr = array.decode(stream);
@@ -31,7 +31,7 @@ describe('LazyArray', function() {
   });
 
     it('should have an inspect method', function() {
-      const stream = new DecodeStream(new Buffer([1, 2, 3, 4, 5]));
+      const stream = new DecodeStream(Buffer.from([1, 2, 3, 4, 5]));
       const array = new LazyArray(uint8, 4);
 
       const arr = array.decode(stream);
@@ -39,7 +39,7 @@ describe('LazyArray', function() {
     });
 
     return it('should decode length as number before array', function() {
-      const stream = new DecodeStream(new Buffer([4, 1, 2, 3, 4, 5]));
+      const stream = new DecodeStream(Buffer.from([4, 1, 2, 3, 4, 5]));
       const array = new LazyArray(uint8, uint8);
       const arr = array.decode(stream);
 
@@ -49,7 +49,7 @@ describe('LazyArray', function() {
 
   describe('size', () =>
     it('should work with LazyArrays', function() {
-      const stream = new DecodeStream(new Buffer([1, 2, 3, 4, 5]));
+      const stream = new DecodeStream(Buffer.from([1, 2, 3, 4, 5]));
       const array = new LazyArray(uint8, 4);
       const arr = array.decode(stream);
 
@@ -59,13 +59,13 @@ describe('LazyArray', function() {
 
   return describe('encode', () =>
     it('should work with LazyArrays', function(done) {
-      const stream = new DecodeStream(new Buffer([1, 2, 3, 4, 5]));
+      const stream = new DecodeStream(Buffer.from([1, 2, 3, 4, 5]));
       const array = new LazyArray(uint8, 4);
       const arr = array.decode(stream);
 
       const enc = new EncodeStream;
       enc.pipe(concat(function(buf) {
-        buf.should.deep.equal(new Buffer([1, 2, 3, 4]));
+        buf.should.deep.equal(Buffer.from([1, 2, 3, 4]));
         return done();
       })
       );

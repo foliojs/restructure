@@ -5,13 +5,13 @@ const concat = require('concat-stream');
 describe('Boolean', function() {
   describe('decode', function() {
     it('should decode 0 as false', function() {
-      const stream = new DecodeStream(new Buffer([0]));
+      const stream = new DecodeStream(Buffer.from([0]));
       const boolean = new Boolean(uint8);
       return boolean.decode(stream).should.equal(false);
     });
 
     return it('should decode 1 as true', function() {
-      const stream = new DecodeStream(new Buffer([1]));
+      const stream = new DecodeStream(Buffer.from([1]));
       const boolean = new Boolean(uint8);
       return boolean.decode(stream).should.equal(true);
     });
@@ -19,7 +19,7 @@ describe('Boolean', function() {
 
   describe('size', () =>
     it('should return given type size', function() {
-      const stream = new DecodeStream(new Buffer([0]));
+      const stream = new DecodeStream(Buffer.from([0]));
       const boolean = new Boolean(uint8);
       return boolean.size().should.equal(1);
     })
@@ -30,7 +30,7 @@ describe('Boolean', function() {
       const stream = new EncodeStream;
       const boolean = new Boolean(uint8);
       stream.pipe(concat(function(buf) {
-        buf.should.deep.equal(new Buffer([0]));
+        buf.should.deep.equal(Buffer.from([0]));
         return done();
       })
       );
@@ -43,7 +43,7 @@ describe('Boolean', function() {
       const stream = new EncodeStream;
       const boolean = new Boolean(uint8);
       stream.pipe(concat(function(buf) {
-        buf.should.deep.equal(new Buffer([1]));
+        buf.should.deep.equal(Buffer.from([1]));
         return done();
       })
       );

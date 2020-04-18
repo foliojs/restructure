@@ -5,44 +5,44 @@ const concat = require('concat-stream');
 describe('String', function() {
   describe('decode', function() {
     it('should decode fixed length', function() {
-      const stream = new DecodeStream(new Buffer('testing'));
+      const stream = new DecodeStream(Buffer.from('testing'));
       const string = new StringT(7);
       return string.decode(stream).should.equal('testing');
     });
 
     it('should decode length from parent key', function() {
-      const stream = new DecodeStream(new Buffer('testing'));
+      const stream = new DecodeStream(Buffer.from('testing'));
       const string = new StringT('len');
       return string.decode(stream, {len: 7}).should.equal('testing');
     });
 
     it('should decode length as number before string', function() {
-      const stream = new DecodeStream(new Buffer('\x07testing'));
+      const stream = new DecodeStream(Buffer.from('\x07testing'));
       const string = new StringT(uint8);
       return string.decode(stream).should.equal('testing');
     });
 
     it('should decode utf8', function() {
-      const stream = new DecodeStream(new Buffer('🍻'));
+      const stream = new DecodeStream(Buffer.from('🍻'));
       const string = new StringT(4, 'utf8');
       return string.decode(stream).should.equal('🍻');
     });
 
     it('should decode encoding computed from function', function() {
-      const stream = new DecodeStream(new Buffer('🍻'));
+      const stream = new DecodeStream(Buffer.from('🍻'));
       const string = new StringT(4, function() { return 'utf8'; });
       return string.decode(stream).should.equal('🍻');
     });
 
     it('should decode null-terminated string and read past terminator', function() {
-      const stream = new DecodeStream(new Buffer('🍻\x00'));
+      const stream = new DecodeStream(Buffer.from('🍻\x00'));
       const string = new StringT(null, 'utf8');
       string.decode(stream).should.equal('🍻');
       return stream.pos.should.equal(5);
     });
 
     return it('should decode remainder of buffer when null-byte missing', function() {
-      const stream = new DecodeStream(new Buffer('🍻'));
+      const stream = new DecodeStream(Buffer.from('🍻'));
       const string = new StringT(null, 'utf8');
       return string.decode(stream).should.equal('🍻');
     });
@@ -89,7 +89,7 @@ describe('String', function() {
     it('should encode using string length', function(done) {
       const stream = new EncodeStream;
       stream.pipe(concat(function(buf) {
-        buf.should.deep.equal(new Buffer('testing'));
+        buf.should.deep.equal(Buffer.from('testing'));
         return done();
       })
       );
@@ -102,7 +102,7 @@ describe('String', function() {
     it('should encode length as number before string', function(done) {
       const stream = new EncodeStream;
       stream.pipe(concat(function(buf) {
-        buf.should.deep.equal(new Buffer('\x07testing'));
+        buf.should.deep.equal(Buffer.from('\x07testing'));
         return done();
       })
       );
@@ -115,7 +115,7 @@ describe('String', function() {
     it('should encode length as number before string utf8', function(done) {
       const stream = new EncodeStream;
       stream.pipe(concat(function(buf) {
-        buf.should.deep.equal(new Buffer('\x0ctesting 😜', 'utf8'));
+        buf.should.deep.equal(Buffer.from('\x0ctesting 😜', 'utf8'));
         return done();
       })
       );
@@ -128,7 +128,7 @@ describe('String', function() {
     it('should encode utf8', function(done) {
       const stream = new EncodeStream;
       stream.pipe(concat(function(buf) {
-        buf.should.deep.equal(new Buffer('🍻'));
+        buf.should.deep.equal(Buffer.from('🍻'));
         return done();
       })
       );
@@ -141,7 +141,7 @@ describe('String', function() {
     it('should encode encoding computed from function', function(done) {
       const stream = new EncodeStream;
       stream.pipe(concat(function(buf) {
-        buf.should.deep.equal(new Buffer('🍻'));
+        buf.should.deep.equal(Buffer.from('🍻'));
         return done();
       })
       );
@@ -154,7 +154,7 @@ describe('String', function() {
     return it('should encode null-terminated string', function(done) {
       const stream = new EncodeStream;
       stream.pipe(concat(function(buf) {
-        buf.should.deep.equal(new Buffer('🍻\x00'));
+        buf.should.deep.equal(Buffer.from('🍻\x00'));
         return done();
       })
       );

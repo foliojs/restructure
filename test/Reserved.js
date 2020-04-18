@@ -14,7 +14,7 @@ describe('Reserved', function() {
   });
 
   it('should decode', function() {
-    const stream = new DecodeStream(new Buffer([0, 0]));
+    const stream = new DecodeStream(Buffer.from([0, 0]));
     const reserved = new Reserved(uint16);
     should.not.exist(reserved.decode(stream));
     return stream.pos.should.equal(2);
@@ -24,7 +24,7 @@ describe('Reserved', function() {
     const stream = new EncodeStream;
     const reserved = new Reserved(uint16);
     stream.pipe(concat(function(buf) {
-      buf.should.deep.equal(new Buffer([0, 0]));
+      buf.should.deep.equal(Buffer.from([0, 0]));
       return done();
     })
     );

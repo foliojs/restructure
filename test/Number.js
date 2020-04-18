@@ -19,7 +19,7 @@ const concat = require('concat-stream');
 describe('Number', function() {
   describe('uint8', function() {
     it('should decode', function() {
-      const stream = new DecodeStream(new Buffer([0xab, 0xff]));
+      const stream = new DecodeStream(Buffer.from([0xab, 0xff]));
       uint8.decode(stream).should.equal(0xab);
       return uint8.decode(stream).should.equal(0xff);
     });
@@ -29,7 +29,7 @@ describe('Number', function() {
     return it('should encode', function(done) {
       const stream = new EncodeStream;
       stream.pipe(concat(function(buf) {
-        buf.should.deep.equal(new Buffer([0xab, 0xff]));
+        buf.should.deep.equal(Buffer.from([0xab, 0xff]));
         return done();
       })
       );
@@ -46,7 +46,7 @@ describe('Number', function() {
 
   describe('uint16be', function() {
     it('should decode', function() {
-      const stream = new DecodeStream(new Buffer([0xab, 0xff]));
+      const stream = new DecodeStream(Buffer.from([0xab, 0xff]));
       return uint16be.decode(stream).should.equal(0xabff);
     });
 
@@ -55,7 +55,7 @@ describe('Number', function() {
     return it('should encode', function(done) {
       const stream = new EncodeStream;
       stream.pipe(concat(function(buf) {
-        buf.should.deep.equal(new Buffer([0xab, 0xff]));
+        buf.should.deep.equal(Buffer.from([0xab, 0xff]));
         return done();
       })
       );
@@ -67,7 +67,7 @@ describe('Number', function() {
 
   describe('uint16le', function() {
     it('should decode', function() {
-      const stream = new DecodeStream(new Buffer([0xff, 0xab]));
+      const stream = new DecodeStream(Buffer.from([0xff, 0xab]));
       return uint16le.decode(stream).should.equal(0xabff);
     });
 
@@ -76,7 +76,7 @@ describe('Number', function() {
     return it('should encode', function(done) {
       const stream = new EncodeStream;
       stream.pipe(concat(function(buf) {
-        buf.should.deep.equal(new Buffer([0xff, 0xab]));
+        buf.should.deep.equal(Buffer.from([0xff, 0xab]));
         return done();
       })
       );
@@ -92,7 +92,7 @@ describe('Number', function() {
 
   describe('uint24be', function() {
     it('should decode', function() {
-      const stream = new DecodeStream(new Buffer([0xff, 0xab, 0x24]));
+      const stream = new DecodeStream(Buffer.from([0xff, 0xab, 0x24]));
       return uint24be.decode(stream).should.equal(0xffab24);
     });
 
@@ -101,7 +101,7 @@ describe('Number', function() {
     return it('should encode', function(done) {
       const stream = new EncodeStream;
       stream.pipe(concat(function(buf) {
-        buf.should.deep.equal(new Buffer([0xff, 0xab, 0x24]));
+        buf.should.deep.equal(Buffer.from([0xff, 0xab, 0x24]));
         return done();
       })
       );
@@ -113,7 +113,7 @@ describe('Number', function() {
 
   describe('uint24le', function() {
     it('should decode', function() {
-      const stream = new DecodeStream(new Buffer([0x24, 0xab, 0xff]));
+      const stream = new DecodeStream(Buffer.from([0x24, 0xab, 0xff]));
       return uint24le.decode(stream).should.equal(0xffab24);
     });
 
@@ -122,7 +122,7 @@ describe('Number', function() {
     return it('should encode', function(done) {
       const stream = new EncodeStream;
       stream.pipe(concat(function(buf) {
-        buf.should.deep.equal(new Buffer([0x24, 0xab, 0xff]));
+        buf.should.deep.equal(Buffer.from([0x24, 0xab, 0xff]));
         return done();
       })
       );
@@ -138,7 +138,7 @@ describe('Number', function() {
 
   describe('uint32be', function() {
     it('should decode', function() {
-      const stream = new DecodeStream(new Buffer([0xff, 0xab, 0x24, 0xbf]));
+      const stream = new DecodeStream(Buffer.from([0xff, 0xab, 0x24, 0xbf]));
       return uint32be.decode(stream).should.equal(0xffab24bf);
     });
 
@@ -147,7 +147,7 @@ describe('Number', function() {
     return it('should encode', function(done) {
       const stream = new EncodeStream;
       stream.pipe(concat(function(buf) {
-        buf.should.deep.equal(new Buffer([0xff, 0xab, 0x24, 0xbf]));
+        buf.should.deep.equal(Buffer.from([0xff, 0xab, 0x24, 0xbf]));
         return done();
       })
       );
@@ -159,7 +159,7 @@ describe('Number', function() {
 
   describe('uint32le', function() {
     it('should decode', function() {
-      const stream = new DecodeStream(new Buffer([0xbf, 0x24, 0xab, 0xff]));
+      const stream = new DecodeStream(Buffer.from([0xbf, 0x24, 0xab, 0xff]));
       return uint32le.decode(stream).should.equal(0xffab24bf);
     });
 
@@ -168,7 +168,7 @@ describe('Number', function() {
     return it('should encode', function(done) {
       const stream = new EncodeStream;
       stream.pipe(concat(function(buf) {
-        buf.should.deep.equal(new Buffer([0xbf, 0x24, 0xab, 0xff]));
+        buf.should.deep.equal(Buffer.from([0xbf, 0x24, 0xab, 0xff]));
         return done();
       })
       );
@@ -180,7 +180,7 @@ describe('Number', function() {
 
   describe('int8', function() {
     it('should decode', function() {
-      const stream = new DecodeStream(new Buffer([0x7f, 0xff]));
+      const stream = new DecodeStream(Buffer.from([0x7f, 0xff]));
       int8.decode(stream).should.equal(127);
       return int8.decode(stream).should.equal(-1);
     });
@@ -190,7 +190,7 @@ describe('Number', function() {
     return it('should encode', function(done) {
       const stream = new EncodeStream;
       stream.pipe(concat(function(buf) {
-        buf.should.deep.equal(new Buffer([0x7f, 0xff]));
+        buf.should.deep.equal(Buffer.from([0x7f, 0xff]));
         return done();
       })
       );
@@ -207,7 +207,7 @@ describe('Number', function() {
 
   describe('int16be', function() {
     it('should decode', function() {
-      const stream = new DecodeStream(new Buffer([0xff, 0xab]));
+      const stream = new DecodeStream(Buffer.from([0xff, 0xab]));
       return int16be.decode(stream).should.equal(-85);
     });
 
@@ -216,7 +216,7 @@ describe('Number', function() {
     return it('should encode', function(done) {
       const stream = new EncodeStream;
       stream.pipe(concat(function(buf) {
-        buf.should.deep.equal(new Buffer([0xff, 0xab]));
+        buf.should.deep.equal(Buffer.from([0xff, 0xab]));
         return done();
       })
       );
@@ -228,7 +228,7 @@ describe('Number', function() {
 
   describe('int16le', function() {
     it('should decode', function() {
-      const stream = new DecodeStream(new Buffer([0xab, 0xff]));
+      const stream = new DecodeStream(Buffer.from([0xab, 0xff]));
       return int16le.decode(stream).should.equal(-85);
     });
 
@@ -237,7 +237,7 @@ describe('Number', function() {
     return it('should encode', function(done) {
       const stream = new EncodeStream;
       stream.pipe(concat(function(buf) {
-        buf.should.deep.equal(new Buffer([0xab, 0xff]));
+        buf.should.deep.equal(Buffer.from([0xab, 0xff]));
         return done();
       })
       );
@@ -253,7 +253,7 @@ describe('Number', function() {
 
   describe('int24be', function() {
     it('should decode', function() {
-      const stream = new DecodeStream(new Buffer([0xff, 0xab, 0x24]));
+      const stream = new DecodeStream(Buffer.from([0xff, 0xab, 0x24]));
       return int24be.decode(stream).should.equal(-21724);
     });
 
@@ -262,7 +262,7 @@ describe('Number', function() {
     return it('should encode', function(done) {
       const stream = new EncodeStream;
       stream.pipe(concat(function(buf) {
-        buf.should.deep.equal(new Buffer([0xff, 0xab, 0x24]));
+        buf.should.deep.equal(Buffer.from([0xff, 0xab, 0x24]));
         return done();
       })
       );
@@ -274,7 +274,7 @@ describe('Number', function() {
 
   describe('int24le', function() {
     it('should decode', function() {
-      const stream = new DecodeStream(new Buffer([0x24, 0xab, 0xff]));
+      const stream = new DecodeStream(Buffer.from([0x24, 0xab, 0xff]));
       return int24le.decode(stream).should.equal(-21724);
     });
 
@@ -283,7 +283,7 @@ describe('Number', function() {
     return it('should encode', function(done) {
       const stream = new EncodeStream;
       stream.pipe(concat(function(buf) {
-        buf.should.deep.equal(new Buffer([0x24, 0xab, 0xff]));
+        buf.should.deep.equal(Buffer.from([0x24, 0xab, 0xff]));
         return done();
       })
       );
@@ -299,7 +299,7 @@ describe('Number', function() {
 
   describe('int32be', function() {
     it('should decode', function() {
-      const stream = new DecodeStream(new Buffer([0xff, 0xab, 0x24, 0xbf]));
+      const stream = new DecodeStream(Buffer.from([0xff, 0xab, 0x24, 0xbf]));
       return int32be.decode(stream).should.equal(-5561153);
     });
 
@@ -308,7 +308,7 @@ describe('Number', function() {
     return it('should encode', function(done) {
       const stream = new EncodeStream;
       stream.pipe(concat(function(buf) {
-        buf.should.deep.equal(new Buffer([0xff, 0xab, 0x24, 0xbf]));
+        buf.should.deep.equal(Buffer.from([0xff, 0xab, 0x24, 0xbf]));
         return done();
       })
       );
@@ -320,7 +320,7 @@ describe('Number', function() {
 
   describe('int32le', function() {
     it('should decode', function() {
-      const stream = new DecodeStream(new Buffer([0xbf, 0x24, 0xab, 0xff]));
+      const stream = new DecodeStream(Buffer.from([0xbf, 0x24, 0xab, 0xff]));
       return int32le.decode(stream).should.equal(-5561153);
     });
 
@@ -329,7 +329,7 @@ describe('Number', function() {
     return it('should encode', function(done) {
       const stream = new EncodeStream;
       stream.pipe(concat(function(buf) {
-        buf.should.deep.equal(new Buffer([0xbf, 0x24, 0xab, 0xff]));
+        buf.should.deep.equal(Buffer.from([0xbf, 0x24, 0xab, 0xff]));
         return done();
       })
       );
@@ -345,7 +345,7 @@ describe('Number', function() {
 
   describe('floatbe', function() {
     it('should decode', function() {
-      const stream = new DecodeStream(new Buffer([0x43, 0x7a, 0x8c, 0xcd]));
+      const stream = new DecodeStream(Buffer.from([0x43, 0x7a, 0x8c, 0xcd]));
       return floatbe.decode(stream).should.be.closeTo(250.55, 0.005);
     });
 
@@ -354,7 +354,7 @@ describe('Number', function() {
     return it('should encode', function(done) {
       const stream = new EncodeStream;
       stream.pipe(concat(function(buf) {
-        buf.should.deep.equal(new Buffer([0x43, 0x7a, 0x8c, 0xcd]));
+        buf.should.deep.equal(Buffer.from([0x43, 0x7a, 0x8c, 0xcd]));
         return done();
       })
       );
@@ -366,7 +366,7 @@ describe('Number', function() {
 
   describe('floatle', function() {
     it('should decode', function() {
-      const stream = new DecodeStream(new Buffer([0xcd, 0x8c, 0x7a, 0x43]));
+      const stream = new DecodeStream(Buffer.from([0xcd, 0x8c, 0x7a, 0x43]));
       return floatle.decode(stream).should.be.closeTo(250.55, 0.005);
     });
 
@@ -375,7 +375,7 @@ describe('Number', function() {
     return it('should encode', function(done) {
       const stream = new EncodeStream;
       stream.pipe(concat(function(buf) {
-        buf.should.deep.equal(new Buffer([0xcd, 0x8c, 0x7a, 0x43]));
+        buf.should.deep.equal(Buffer.from([0xcd, 0x8c, 0x7a, 0x43]));
         return done();
       })
       );
@@ -391,7 +391,7 @@ describe('Number', function() {
 
   describe('doublebe', function() {
     it('should decode', function() {
-      const stream = new DecodeStream(new Buffer([0x40, 0x93, 0x4a, 0x3d, 0x70, 0xa3, 0xd7, 0x0a]));
+      const stream = new DecodeStream(Buffer.from([0x40, 0x93, 0x4a, 0x3d, 0x70, 0xa3, 0xd7, 0x0a]));
       return doublebe.decode(stream).should.be.equal(1234.56);
     });
 
@@ -400,7 +400,7 @@ describe('Number', function() {
     return it('should encode', function(done) {
       const stream = new EncodeStream;
       stream.pipe(concat(function(buf) {
-        buf.should.deep.equal(new Buffer([0x40, 0x93, 0x4a, 0x3d, 0x70, 0xa3, 0xd7, 0x0a]));
+        buf.should.deep.equal(Buffer.from([0x40, 0x93, 0x4a, 0x3d, 0x70, 0xa3, 0xd7, 0x0a]));
         return done();
       })
       );
@@ -412,7 +412,7 @@ describe('Number', function() {
 
   describe('doublele', function() {
     it('should decode', function() {
-      const stream = new DecodeStream(new Buffer([0x0a, 0xd7, 0xa3, 0x70, 0x3d, 0x4a, 0x93, 0x40]));
+      const stream = new DecodeStream(Buffer.from([0x0a, 0xd7, 0xa3, 0x70, 0x3d, 0x4a, 0x93, 0x40]));
       return doublele.decode(stream).should.be.equal(1234.56);
     });
 
@@ -421,7 +421,7 @@ describe('Number', function() {
     return it('should encode', function(done) {
       const stream = new EncodeStream;
       stream.pipe(concat(function(buf) {
-        buf.should.deep.equal(new Buffer([0x0a, 0xd7, 0xa3, 0x70, 0x3d, 0x4a, 0x93, 0x40]));
+        buf.should.deep.equal(Buffer.from([0x0a, 0xd7, 0xa3, 0x70, 0x3d, 0x4a, 0x93, 0x40]));
         return done();
       })
       );
@@ -437,7 +437,7 @@ describe('Number', function() {
 
   describe('fixed16be', function() {
     it('should decode', function() {
-      const stream = new DecodeStream(new Buffer([0x19, 0x57]));
+      const stream = new DecodeStream(Buffer.from([0x19, 0x57]));
       return fixed16be.decode(stream).should.be.closeTo(25.34, 0.005);
     });
 
@@ -446,7 +446,7 @@ describe('Number', function() {
     return it('should encode', function(done) {
       const stream = new EncodeStream;
       stream.pipe(concat(function(buf) {
-        buf.should.deep.equal(new Buffer([0x19, 0x57]));
+        buf.should.deep.equal(Buffer.from([0x19, 0x57]));
         return done();
       })
       );
@@ -458,7 +458,7 @@ describe('Number', function() {
 
   describe('fixed16le', function() {
     it('should decode', function() {
-      const stream = new DecodeStream(new Buffer([0x57, 0x19]));
+      const stream = new DecodeStream(Buffer.from([0x57, 0x19]));
       return fixed16le.decode(stream).should.be.closeTo(25.34, 0.005);
     });
 
@@ -467,7 +467,7 @@ describe('Number', function() {
     return it('should encode', function(done) {
       const stream = new EncodeStream;
       stream.pipe(concat(function(buf) {
-        buf.should.deep.equal(new Buffer([0x57, 0x19]));
+        buf.should.deep.equal(Buffer.from([0x57, 0x19]));
         return done();
       })
       );
@@ -483,7 +483,7 @@ describe('Number', function() {
 
   describe('fixed32be', function() {
     it('should decode', function() {
-      const stream = new DecodeStream(new Buffer([0x00, 0xfa, 0x8c, 0xcc]));
+      const stream = new DecodeStream(Buffer.from([0x00, 0xfa, 0x8c, 0xcc]));
       return fixed32be.decode(stream).should.be.closeTo(250.55, 0.005);
     });
 
@@ -492,7 +492,7 @@ describe('Number', function() {
     return it('should encode', function(done) {
       const stream = new EncodeStream;
       stream.pipe(concat(function(buf) {
-        buf.should.deep.equal(new Buffer([0x00, 0xfa, 0x8c, 0xcc]));
+        buf.should.deep.equal(Buffer.from([0x00, 0xfa, 0x8c, 0xcc]));
         return done();
       })
       );
@@ -504,7 +504,7 @@ describe('Number', function() {
 
   return describe('fixed32le', function() {
     it('should decode', function() {
-      const stream = new DecodeStream(new Buffer([0xcc, 0x8c, 0xfa, 0x00]));
+      const stream = new DecodeStream(Buffer.from([0xcc, 0x8c, 0xfa, 0x00]));
       return fixed32le.decode(stream).should.be.closeTo(250.55, 0.005);
     });
 
@@ -513,7 +513,7 @@ describe('Number', function() {
     return it('should encode', function(done) {
       const stream = new EncodeStream;
       stream.pipe(concat(function(buf) {
-        buf.should.deep.equal(new Buffer([0xcc, 0x8c, 0xfa, 0x00]));
+        buf.should.deep.equal(Buffer.from([0xcc, 0x8c, 0xfa, 0x00]));
         return done();
       })
       );

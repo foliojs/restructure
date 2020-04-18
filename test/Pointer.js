@@ -5,39 +5,39 @@ const concat = require('concat-stream');
 describe('Pointer', function() {
   describe('decode', function() {
     it('should handle null pointers', function() {
-      const stream = new DecodeStream(new Buffer([0]));
+      const stream = new DecodeStream(Buffer.from([0]));
       const pointer = new Pointer(uint8, uint8);
       return should.not.exist(pointer.decode(stream, {_startOffset: 50}));
     });
 
     it('should use local offsets from start of parent by default', function() {
-      const stream = new DecodeStream(new Buffer([1, 53]));
+      const stream = new DecodeStream(Buffer.from([1, 53]));
       const pointer = new Pointer(uint8, uint8);
       return pointer.decode(stream, {_startOffset: 0}).should.equal(53);
     });
 
     it('should support immediate offsets', function() {
-      const stream = new DecodeStream(new Buffer([1, 53]));
+      const stream = new DecodeStream(Buffer.from([1, 53]));
       const pointer = new Pointer(uint8, uint8, {type: 'immediate'});
       return pointer.decode(stream).should.equal(53);
     });
 
     it('should support offsets relative to the parent', function() {
-      const stream = new DecodeStream(new Buffer([0, 0, 1, 53]));
+      const stream = new DecodeStream(Buffer.from([0, 0, 1, 53]));
       stream.pos = 2;
       const pointer = new Pointer(uint8, uint8, {type: 'parent'});
       return pointer.decode(stream, {parent: {_startOffset: 2}}).should.equal(53);
     });
 
     it('should support global offsets', function() {
-      const stream = new DecodeStream(new Buffer([1, 2, 4, 0, 0, 0, 53]));
+      const stream = new DecodeStream(Buffer.from([1, 2, 4, 0, 0, 0, 53]));
       const pointer = new Pointer(uint8, uint8, {type: 'global'});
       stream.pos = 2;
       return pointer.decode(stream, {parent: {parent: {_startOffset: 2}}}).should.equal(53);
     });
 
     it('should support offsets relative to a property on the parent', function() {
-      const stream = new DecodeStream(new Buffer([1, 0, 0, 0, 0, 53]));
+      const stream = new DecodeStream(Buffer.from([1, 0, 0, 0, 0, 53]));
       const pointer = new Pointer(uint8, uint8, {relativeTo: ctx => ctx.parent.ptr});
       return pointer.decode(stream, {_startOffset: 0, parent: {ptr: 4}}).should.equal(53);
     });
@@ -47,13 +47,13 @@ describe('Pointer', function() {
     });
 
     it('should support returning pointer if there is no decode type', function() {
-      const stream = new DecodeStream(new Buffer([4]));
+      const stream = new DecodeStream(Buffer.from([4]));
       const pointer = new Pointer(uint8, 'void');
       return pointer.decode(stream, {_startOffset: 0}).should.equal(4);
     });
 
     return it('should support decoding pointers lazily', function() {
-      const stream = new DecodeStream(new Buffer([1, 53]));
+      const stream = new DecodeStream(Buffer.from([1, 53]));
       const struct = new Struct({
         ptr: new Pointer(uint8, uint8, {lazy: true})});
 
@@ -116,7 +116,7 @@ describe('Pointer', function() {
     it('should handle null pointers', function(done) {
       const stream = new EncodeStream;
       stream.pipe(concat(function(buf) {
-        buf.should.deep.equal(new Buffer([0]));
+        buf.should.deep.equal(Buffer.from([0]));
         return done();
       })
       );
@@ -138,7 +138,7 @@ describe('Pointer', function() {
     it('should handle local offsets', function(done) {
       const stream = new EncodeStream;
       stream.pipe(concat(function(buf) {
-        buf.should.deep.equal(new Buffer([1]));
+        buf.should.deep.equal(Buffer.from([1]));
         return done();
       })
       );
@@ -163,7 +163,7 @@ describe('Pointer', function() {
     it('should handle immediate offsets', function(done) {
       const stream = new EncodeStream;
       stream.pipe(concat(function(buf) {
-        buf.should.deep.equal(new Buffer([0]));
+        buf.should.deep.equal(Buffer.from([0]));
         return done();
       })
       );
@@ -188,7 +188,7 @@ describe('Pointer', function() {
     it('should handle immediate offsets', function(done) {
       const stream = new EncodeStream;
       stream.pipe(concat(function(buf) {
-        buf.should.deep.equal(new Buffer([0]));
+        buf.should.deep.equal(Buffer.from([0]));
         return done();
       })
       );
@@ -213,7 +213,7 @@ describe('Pointer', function() {
     it('should handle offsets relative to parent', function(done) {
       const stream = new EncodeStream;
       stream.pipe(concat(function(buf) {
-        buf.should.deep.equal(new Buffer([2]));
+        buf.should.deep.equal(Buffer.from([2]));
         return done();
       })
       );
@@ -240,7 +240,7 @@ describe('Pointer', function() {
     it('should handle global offsets', function(done) {
       const stream = new EncodeStream;
       stream.pipe(concat(function(buf) {
-        buf.should.deep.equal(new Buffer([5]));
+        buf.should.deep.equal(Buffer.from([5]));
         return done();
       })
       );
@@ -271,7 +271,7 @@ describe('Pointer', function() {
     it('should support offsets relative to a property on the parent', function(done) {
       const stream = new EncodeStream;
       stream.pipe(concat(function(buf) {
-        buf.should.deep.equal(new Buffer([6]));
+        buf.should.deep.equal(Buffer.from([6]));
         return done();
       })
       );
@@ -299,7 +299,7 @@ describe('Pointer', function() {
     it('should support void pointers', function(done) {
       const stream = new EncodeStream;
       stream.pipe(concat(function(buf) {
-        buf.should.deep.equal(new Buffer([1]));
+        buf.should.deep.equal(Buffer.from([1]));
         return done();
       })
       );

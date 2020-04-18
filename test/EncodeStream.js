@@ -6,19 +6,19 @@ describe('EncodeStream', function() {
   it('should write a buffer', function(done) {
     const stream = new EncodeStream;
     stream.pipe(concat(function(buf) {
-      buf.should.deep.equal(new Buffer([1,2,3]));
+      buf.should.deep.equal(Buffer.from([1,2,3]));
       return done();
     })
     );
 
-    stream.writeBuffer(new Buffer([1,2,3]));
+    stream.writeBuffer(Buffer.from([1,2,3]));
     return stream.end();
   });
 
   it('should writeUInt16BE', function(done) {
     const stream = new EncodeStream;
     stream.pipe(concat(function(buf) {
-      buf.should.deep.equal(new Buffer([0xab, 0xcd]));
+      buf.should.deep.equal(Buffer.from([0xab, 0xcd]));
       return done();
     })
     );
@@ -30,7 +30,7 @@ describe('EncodeStream', function() {
   it('should writeUInt16LE', function(done) {
     const stream = new EncodeStream;
     stream.pipe(concat(function(buf) {
-      buf.should.deep.equal(new Buffer([0xab, 0xcd]));
+      buf.should.deep.equal(Buffer.from([0xab, 0xcd]));
       return done();
     })
     );
@@ -42,7 +42,7 @@ describe('EncodeStream', function() {
   it('should writeUInt24BE', function(done) {
     const stream = new EncodeStream;
     stream.pipe(concat(function(buf) {
-      buf.should.deep.equal(new Buffer([0xab, 0xcd, 0xef]));
+      buf.should.deep.equal(Buffer.from([0xab, 0xcd, 0xef]));
       return done();
     })
     );
@@ -54,7 +54,7 @@ describe('EncodeStream', function() {
   it('should writeUInt24LE', function(done) {
     const stream = new EncodeStream;
     stream.pipe(concat(function(buf) {
-      buf.should.deep.equal(new Buffer([0xef, 0xcd, 0xab]));
+      buf.should.deep.equal(Buffer.from([0xef, 0xcd, 0xab]));
       return done();
     })
     );
@@ -66,7 +66,7 @@ describe('EncodeStream', function() {
   it('should writeInt24BE', function(done) {
     const stream = new EncodeStream;
     stream.pipe(concat(function(buf) {
-      buf.should.deep.equal(new Buffer([0xff, 0xab, 0x24, 0xab, 0xcd, 0xef]));
+      buf.should.deep.equal(Buffer.from([0xff, 0xab, 0x24, 0xab, 0xcd, 0xef]));
       return done();
     })
     );
@@ -79,7 +79,7 @@ describe('EncodeStream', function() {
   it('should writeInt24LE', function(done) {
     const stream = new EncodeStream;
     stream.pipe(concat(function(buf) {
-      buf.should.deep.equal(new Buffer([0x24, 0xab, 0xff, 0xef, 0xcd, 0xab]));
+      buf.should.deep.equal(Buffer.from([0x24, 0xab, 0xff, 0xef, 0xcd, 0xab]));
       return done();
     })
     );
@@ -92,7 +92,7 @@ describe('EncodeStream', function() {
   it('should fill', function(done) {
     const stream = new EncodeStream;
     stream.pipe(concat(function(buf) {
-      buf.should.deep.equal(new Buffer([10, 10, 10, 10, 10]));
+      buf.should.deep.equal(Buffer.from([10, 10, 10, 10, 10]));
       return done();
     })
     );
@@ -105,7 +105,7 @@ describe('EncodeStream', function() {
     it('should encode ascii by default', function(done) {
       const stream = new EncodeStream;
       stream.pipe(concat(function(buf) {
-        buf.should.deep.equal(new Buffer('some text', 'ascii'));
+        buf.should.deep.equal(Buffer.from('some text', 'ascii'));
         return done();
       })
       );
@@ -117,7 +117,7 @@ describe('EncodeStream', function() {
     it('should encode ascii', function(done) {
       const stream = new EncodeStream;
       stream.pipe(concat(function(buf) {
-        buf.should.deep.equal(new Buffer('some text', 'ascii'));
+        buf.should.deep.equal(Buffer.from('some text', 'ascii'));
         return done();
       })
       );
@@ -129,7 +129,7 @@ describe('EncodeStream', function() {
     it('should encode utf8', function(done) {
       const stream = new EncodeStream;
       stream.pipe(concat(function(buf) {
-        buf.should.deep.equal(new Buffer('unicode! 👍', 'utf8'));
+        buf.should.deep.equal(Buffer.from('unicode! 👍', 'utf8'));
         return done();
       })
       );
@@ -141,7 +141,7 @@ describe('EncodeStream', function() {
     it('should encode utf16le', function(done) {
       const stream = new EncodeStream;
       stream.pipe(concat(function(buf) {
-        buf.should.deep.equal(new Buffer('unicode! 👍', 'utf16le'));
+        buf.should.deep.equal(Buffer.from('unicode! 👍', 'utf16le'));
         return done();
       })
       );
@@ -153,7 +153,7 @@ describe('EncodeStream', function() {
     it('should encode ucs2', function(done) {
       const stream = new EncodeStream;
       stream.pipe(concat(function(buf) {
-        buf.should.deep.equal(new Buffer('unicode! 👍', 'ucs2'));
+        buf.should.deep.equal(Buffer.from('unicode! 👍', 'ucs2'));
         return done();
       })
       );
@@ -165,7 +165,7 @@ describe('EncodeStream', function() {
     it('should encode utf16be', function(done) {
       const stream = new EncodeStream;
       stream.pipe(concat(function(out) {
-        const buf = new Buffer('unicode! 👍', 'utf16le');
+        const buf = Buffer.from('unicode! 👍', 'utf16le');
         for (let i = 0, end = buf.length - 1; i < end; i += 2) {
           const byte = buf[i];
           buf[i] = buf[i + 1];
@@ -184,7 +184,7 @@ describe('EncodeStream', function() {
     return it('should encode macroman', function(done) {
       const stream = new EncodeStream;
       stream.pipe(concat(function(out) {
-        const buf = new Buffer([0x8a, 0x63, 0x63, 0x65, 0x6e, 0x74, 0x65, 0x64, 0x20, 0x63, 0x68, 0x87, 0x72, 0x61, 0x63, 0x74, 0x65, 0x72, 0x73]);
+        const buf = Buffer.from([0x8a, 0x63, 0x63, 0x65, 0x6e, 0x74, 0x65, 0x64, 0x20, 0x63, 0x68, 0x87, 0x72, 0x61, 0x63, 0x74, 0x65, 0x72, 0x73]);
         out.should.deep.equal(buf);
         return done();
       })
