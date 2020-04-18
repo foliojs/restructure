@@ -4,12 +4,12 @@
   "description": "Declaratively encode and decode binary data",
   "main": "index.js",
   "devDependencies": {
-    "chai": "~1.9.1",
-    "concat-stream": "~1.4.5",
-    "coveralls": "^3.0.3",
-    "iconv-lite": "^0.4.7",
-    "mocha": "~6.0.2",
-    "nyc": "^13.3.0"
+    "chai": "~4.2.0",
+    "concat-stream": "~2.0.0",
+    "coveralls": "^3.0.11",
+    "iconv-lite": "^0.5.1",
+    "mocha": "~7.1.1",
+    "nyc": "^15.0.1"
   },
   "scripts": {
     "test": "mocha",
