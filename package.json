@@ -12,7 +12,7 @@
     "nyc": "^15.0.1"
   },
   "scripts": {
-    "test": "mocha",
+    "test": "mocha --reporter spec",
     "cover": "nyc --reporter=html --reporter=text mocha",
     "coveralls": "nyc report --reporter=text-lcov | coveralls"
   },
