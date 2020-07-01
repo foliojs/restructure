@@ -116,6 +116,36 @@ describe('VersionedStruct', function() {
       });
     });
 
+    it('should support parent version nested key', function() {
+      const struct = new VersionedStruct('obj.version', {
+        0: {
+          name: new StringT(uint8, 'ascii'),
+          age: uint8
+        },
+        1: {
+          name: new StringT(uint8, 'utf8'),
+          age: uint8,
+          gender: uint8
+        }
+      }
+      );
+
+      let stream = new DecodeStream(Buffer.from('\x05devon\x15'));
+      struct.decode(stream, {obj: {version: 0}}).should.deep.equal({
+        version: 0,
+        name: 'devon',
+        age: 21
+      });
+
+      stream = new DecodeStream(Buffer.from('\x0adevon 👍\x15\x00', 'utf8'));
+      return struct.decode(stream, {obj: {version: 1}}).should.deep.equal({
+        version: 1,
+        name: 'devon 👍',
+        age: 21,
+        gender: 0
+      });
+    });
+
     it('should support sub versioned structs', function() {
       const struct = new VersionedStruct(uint8, {
         0: {

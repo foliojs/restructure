@@ -1,17 +1,24 @@
 const Struct = require('./Struct');
 
+const getPath = (object, pathArray) => {
+  return pathArray.reduce((prevObj, key) => prevObj && prevObj[key], object) 
+}
+
 class VersionedStruct extends Struct {
   constructor(type, versions = {}) {
     super();
     this.type = type;
     this.versions = versions;
+    if (typeof type === 'string') {
+      this.versionPath = type.split('.')
+    }
   }
 
   decode(stream, parent, length = 0) {
     const res = this._setup(stream, parent, length);
 
     if (typeof this.type === 'string') {
-      res.version = parent[this.type];
+      res.version = getPath(parent, this.versionPath);
     } else {
       res.version = this.type.decode(stream);
     }
