@@ -1,8 +1,8 @@
 const Struct = require('./Struct');
 
 const getPath = (object, pathArray) => {
-  return pathArray.reduce((prevObj, key) => prevObj && prevObj[key], object) 
-}
+  return pathArray.reduce((prevObj, key) => prevObj && prevObj[key], object);
+};
 
 class VersionedStruct extends Struct {
   constructor(type, versions = {}) {
@@ -10,7 +10,7 @@ class VersionedStruct extends Struct {
     this.type = type;
     this.versions = versions;
     if (typeof type === 'string') {
-      this.versionPath = type.split('.')
+      this.versionPath = type.split('.');
     }
   }
 

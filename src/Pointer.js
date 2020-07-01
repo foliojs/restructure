@@ -26,7 +26,7 @@ class Pointer {
       return null;
     }
 
-    let relative
+    let relative;
     switch (this.options.type) {
       case 'local':     relative = ctx._startOffset; break;
       case 'immediate': relative = stream.pos - this.offsetType.size(); break;
