@@ -1,18 +1,20 @@
-let iconv;
 const stream = require('stream');
 const DecodeStream = require('./DecodeStream');
-try { iconv = require('iconv-lite'); } catch (error) {}
+
+const textEncoder = new TextEncoder();
+const isBigEndian = new Uint8Array(new Uint16Array([0x1234]).buffer)[0] == 0x12;
 
 class EncodeStream extends stream.Readable {
-  constructor(bufferSize =  65536) {
+  constructor(bufferSize = 65536) {
     super(...arguments);
-    this.buffer = Buffer.alloc(bufferSize);
+    this.buffer = new Uint8Array(bufferSize);
+    this.view = new DataView(this.buffer.buffer);
     this.bufferOffset = 0;
     this.pos = 0;
   }
 
   // do nothing, required by node
-  _read() {}
+  _read() { }
 
   ensure(bytes) {
     if ((this.bufferOffset + bytes) > this.buffer.length) {
@@ -22,7 +24,7 @@ class EncodeStream extends stream.Readable {
 
   flush() {
     if (this.bufferOffset > 0) {
-      this.push(Buffer.from(this.buffer.slice(0, this.bufferOffset)));
+      this.push(new Uint8Array(this.buffer.slice(0, this.bufferOffset)));
       return this.bufferOffset = 0;
     }
   }
@@ -34,35 +36,38 @@ class EncodeStream extends stream.Readable {
   }
 
   writeString(string, encoding = 'ascii') {
+    let buf;
     switch (encoding) {
-      case 'utf16le': case 'ucs2': case 'utf8': case 'ascii':
-        return this.writeBuffer(Buffer.from(string, encoding));
+      case 'utf16le':
+      case 'utf16-le':
+      case 'ucs2': // node treats this the same as utf16.
+        buf = stringToUtf16(string, isBigEndian);
+        break;
 
       case 'utf16be':
-        var buf = Buffer.from(string, 'utf16le');
+      case 'utf16-be':
+        buf = stringToUtf16(string, !isBigEndian);
+        break;
 
-        // swap the bytes
-        for (let i = 0, end = buf.length - 1; i < end; i += 2) {
-          const byte = buf[i];
-          buf[i] = buf[i + 1];
-          buf[i + 1] = byte;
-        }
+      case 'utf8':
+        buf = textEncoder.encode(string);
+        break;
 
-        return this.writeBuffer(buf);
+      case 'ascii':
+        buf = stringToAscii(string);
+        break;
 
       default:
-        if (iconv) {
-          return this.writeBuffer(iconv.encode(string, encoding));
-        } else {
-          throw new Error('Install iconv-lite to enable additional string encodings.');
-        }
+        throw new Error(`Unsupported encoding: ${encoding}`);
     }
+
+    this.writeBuffer(buf);
   }
 
   writeUInt24BE(val) {
     this.ensure(3);
     this.buffer[this.bufferOffset++] = (val >>> 16) & 0xff;
-    this.buffer[this.bufferOffset++] = (val >>> 8)  & 0xff;
+    this.buffer[this.bufferOffset++] = (val >>> 8) & 0xff;
     this.buffer[this.bufferOffset++] = val & 0xff;
     return this.pos += 3;
   }
@@ -98,7 +103,7 @@ class EncodeStream extends stream.Readable {
       this.bufferOffset += length;
       return this.pos += length;
     } else {
-      const buf = Buffer.alloc(length);
+      const buf = new Uint8Array(length);
       buf.fill(val);
       return this.writeBuffer(buf);
     }
@@ -110,15 +115,51 @@ class EncodeStream extends stream.Readable {
   }
 }
 
-for (let key in Buffer.prototype) {
-  if (key.slice(0, 5) === 'write') {
-    const bytes = +DecodeStream.TYPES[key.replace(/write|[BL]E/g, '')];
-    EncodeStream.prototype[key] = function(value) {
+function stringToUtf16(string, swap) {
+  let buf = new Uint16Array(string.length);
+  for (let i = 0; i < string.length; i++) {
+    let code = string.charCodeAt(i);
+    if (swap) {
+      code = (code >> 8) | ((code & 0xff) << 8);
+    }
+    buf[i] = code;
+  }
+  return new Uint8Array(buf.buffer);
+}
+
+function stringToAscii(string) {
+  let buf = new Uint8Array(string.length);
+  for (let i = 0; i < string.length; i++) {
+    // Match node.js behavior - encoding allows 8-bit rather than 7-bit.
+    buf[i] = string.charCodeAt(i);
+  }
+  return buf;
+}
+
+for (let key of Object.getOwnPropertyNames(DataView.prototype)) {
+  if (key.slice(0, 3) === 'set') {
+    let type = key.slice(3).replace('Ui', 'UI');
+    if (type === 'Float32') {
+      type = 'Float';
+    } else if (type === 'Float64') {
+      type = 'Double';
+    }
+    let bytes = DecodeStream.TYPES[type];
+    EncodeStream.prototype['write' + type + (bytes === 1 ? '' : 'BE')] = function (value) {
       this.ensure(bytes);
-      this.buffer[key](value, this.bufferOffset);
+      this.view[key](this.bufferOffset, value, false);
       this.bufferOffset += bytes;
       return this.pos += bytes;
     };
+
+    if (bytes !== 1) {
+      EncodeStream.prototype['write' + type + 'LE'] = function (value) {
+        this.ensure(bytes);
+        this.view[key](this.bufferOffset, value, true);
+        this.bufferOffset += bytes;
+        return this.pos += bytes;
+      };
+    }
   }
 }
 

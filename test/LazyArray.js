@@ -30,14 +30,6 @@ describe('LazyArray', function() {
       return arr.toArray().should.deep.equal([1, 2, 3, 4]);
   });
 
-    it('should have an inspect method', function() {
-      const stream = new DecodeStream(Buffer.from([1, 2, 3, 4, 5]));
-      const array = new LazyArray(uint8, 4);
-
-      const arr = array.decode(stream);
-      return arr.inspect().should.equal('[ 1, 2, 3, 4 ]');
-    });
-
     return it('should decode length as number before array', function() {
       const stream = new DecodeStream(Buffer.from([4, 1, 2, 3, 4, 5]));
       const array = new LazyArray(uint8, uint8);

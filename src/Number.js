@@ -61,5 +61,5 @@ class Fixed extends NumberT {
 exports.Fixed = Fixed;
 exports.fixed16be = (exports.fixed16 = new Fixed(16, 'BE'));
 exports.fixed16le = new Fixed(16, 'LE');
-exports.fixed32be = (exports.fixed32 =new Fixed(32, 'BE'));
+exports.fixed32be = (exports.fixed32 = new Fixed(32, 'BE'));
 exports.fixed32le = new Fixed(32, 'LE');

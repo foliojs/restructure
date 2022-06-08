@@ -162,8 +162,9 @@ var struct = new r.Struct({
 A `String` maps a JavaScript string to and from binary encodings.  The length can be a constant, taken
 from a previous field in the parent structure, or encoded using a number type immediately before the string.
 
-Supported encodings include `'ascii'`, `'utf8'`, `'ucs2'`, `'utf16le'`, `'utf16be'`, and if you also install
-[iconv-lite](https://github.com/ashtuchkin/iconv-lite), many other legacy codecs.
+Fully supported encodings include `'ascii'`, `'utf8'`, `'ucs2'`, `'utf16le'`, `'utf16be'`. Decoding is also possible
+with any encoding supported by [TextDecoder](https://developer.mozilla.org/en-US/docs/Web/API/Encoding_API/Encodings),
+however encoding these is not supported.
 
 ```javascript
 // fixed length, ascii encoding by default

@@ -52,7 +52,7 @@ class StringT {
       encoding = 'utf16le';
     }
 
-    let size = Buffer.byteLength(val, encoding);
+    let size = byteLength(val, encoding);
     if (this.length instanceof NumberT) {
       size += this.length.size();
     }
@@ -71,7 +71,7 @@ class StringT {
     }
 
     if (this.length instanceof NumberT) {
-      this.length.encode(stream, Buffer.byteLength(val, encoding));
+      this.length.encode(stream, byteLength(val, encoding));
     }
 
     stream.writeString(val, encoding);
@@ -79,6 +79,47 @@ class StringT {
     if ((this.length == null)) {
       return stream.writeUInt8(0x00);
     }
+  }
+}
+
+function byteLength(string, encoding) {
+  switch (encoding) {
+    case 'ascii':
+      return string.length;
+    case 'utf8':
+      let len = 0;
+      for (let i = 0; i < string.length; i++) {
+        let c = string.charCodeAt(i);
+
+        if (c >= 0xd800 && c <= 0xdbff && i < string.length - 1) {
+          let c2 = string.charCodeAt(++i);
+          if ((c2 & 0xfc00) === 0xdc00) {
+            c = ((c & 0x3ff) << 10) + (c2 & 0x3ff) + 0x10000;
+          } else {
+            // unmatched surrogate.
+            i--;
+          }
+        }
+
+        if ((c & 0xffffff80) === 0) {
+          len++;
+        } else if ((c & 0xfffff800) === 0) {
+          len += 2;
+        } else if ((c & 0xffff0000) === 0) {
+          len += 3;
+        } else if ((c & 0xffe00000) === 0) {
+          len += 4;
+        }
+      }
+      return len;
+    case 'utf16le':
+    case 'utf16-le':
+    case 'utf16be':
+    case 'utf16-be':
+    case 'ucs2':
+      return string.length * 2;
+    default:
+      throw new Error('Unknown encoding ' + encoding);
   }
 }
 

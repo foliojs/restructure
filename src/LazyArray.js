@@ -1,7 +1,6 @@
 const ArrayT = require('./Array');
 const {Number:NumberT} = require('./Number');
 const utils = require('./utils');
-const {inspect} = require('util');
 
 class LazyArrayT extends ArrayT {
   decode(stream, parent) {
@@ -71,10 +70,6 @@ class LazyArray {
       result.push(this.get(i));
     }
     return result;
-  }
-
-  inspect() {
-    return inspect(this.toArray());
   }
 }
 

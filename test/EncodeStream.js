@@ -180,18 +180,5 @@ describe('EncodeStream', function() {
       stream.writeString('unicode! 👍', 'utf16be');
       return stream.end();
     });
-
-    return it('should encode macroman', function(done) {
-      const stream = new EncodeStream;
-      stream.pipe(concat(function(out) {
-        const buf = Buffer.from([0x8a, 0x63, 0x63, 0x65, 0x6e, 0x74, 0x65, 0x64, 0x20, 0x63, 0x68, 0x87, 0x72, 0x61, 0x63, 0x74, 0x65, 0x72, 0x73]);
-        out.should.deep.equal(buf);
-        return done();
-      })
-      );
-
-      stream.writeString('äccented cháracters', 'mac');
-      return stream.end();
-    });
   });
 });
