@@ -1,62 +1,45 @@
-const {Buffer:BufferT, DecodeStream, EncodeStream, uint8} = require('../');
-const should = require('chai').should();
-const concat = require('concat-stream');
+import assert from 'assert';
+import {Buffer as BufferT, uint8, DecodeStream, EncodeStream} from 'restructure';
 
 describe('Buffer', function() {
   describe('decode', function() {
     it('should decode', function() {
-      const stream = new DecodeStream(Buffer.from([0xab, 0xff, 0x1f, 0xb6]));
+      const buffer = new Uint8Array([0xab, 0xff]);
       const buf = new BufferT(2);
-      buf.decode(stream).should.deep.equal(Buffer.from([0xab, 0xff]));
-      return buf.decode(stream).should.deep.equal(Buffer.from([0x1f, 0xb6]));
+      assert.deepEqual(buf.fromBuffer(buffer), new Uint8Array([0xab, 0xff]));
   });
 
-    return it('should decode with parent key length', function() {
-      const stream = new DecodeStream(Buffer.from([0xab, 0xff, 0x1f, 0xb6]));
+    it('should decode with parent key length', function() {
+      const stream = new DecodeStream(new Uint8Array([0xab, 0xff, 0x1f, 0xb6]));
       const buf = new BufferT('len');
-      buf.decode(stream, {len: 3}).should.deep.equal(Buffer.from([0xab, 0xff, 0x1f]));
-      return buf.decode(stream, {len: 1}).should.deep.equal(Buffer.from([0xb6]));
+      assert.deepEqual(buf.decode(stream, {len: 3}), new Uint8Array([0xab, 0xff, 0x1f]));
+      assert.deepEqual(buf.decode(stream, {len: 1}), new Uint8Array([0xb6]));
   });
 });
 
   describe('size', function() {
     it('should return size', function() {
       const buf = new BufferT(2);
-      return buf.size(Buffer.from([0xab, 0xff])).should.equal(2);
+      assert.equal(buf.size(new Uint8Array([0xab, 0xff])), 2);
     });
 
-    return it('should use defined length if no value given', function() {
+    it('should use defined length if no value given', function() {
       const array = new BufferT(10);
-      return array.size().should.equal(10);
+      assert.equal(array.size(), 10);
     });
   });
 
-  return describe('encode', function() {
-    it('should encode', function(done) {
-      const stream = new EncodeStream;
-      stream.pipe(concat(function(buf) {
-        buf.should.deep.equal(Buffer.from([0xab, 0xff, 0x1f, 0xb6]));
-        return done();
-      })
-      );
-
+  describe('encode', function() {
+    it('should encode', function() {
       const buf = new BufferT(2);
-      buf.encode(stream, Buffer.from([0xab, 0xff]));
-      buf.encode(stream, Buffer.from([0x1f, 0xb6]));
-      return stream.end();
+      const buffer = buf.toBuffer(new Uint8Array([0xab, 0xff]));
+      assert.deepEqual(buffer, new Uint8Array([0xab, 0xff]));
     });
 
-    return it('should encode length before buffer', function(done) {
-      const stream = new EncodeStream;
-      stream.pipe(concat(function(buf) {
-        buf.should.deep.equal(Buffer.from([2, 0xab, 0xff]));
-        return done();
-      })
-      );
-
+    it('should encode length before buffer', function() {
       const buf = new BufferT(uint8);
-      buf.encode(stream, Buffer.from([0xab, 0xff]));
-      return stream.end();
+      const buffer = buf.toBuffer(new Uint8Array([0xab, 0xff]));
+      assert.deepEqual(buffer, new Uint8Array([2, 0xab, 0xff]));
     });
   });
 });

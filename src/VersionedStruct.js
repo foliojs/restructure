@@ -1,10 +1,10 @@
-const Struct = require('./Struct');
+import {Struct} from './Struct.js';
 
 const getPath = (object, pathArray) => {
   return pathArray.reduce((prevObj, key) => prevObj && prevObj[key], object);
 };
 
-class VersionedStruct extends Struct {
+export class VersionedStruct extends Struct {
   constructor(type, versions = {}) {
     super();
     this.type = type;
@@ -48,6 +48,10 @@ class VersionedStruct extends Struct {
     let key, type;
     if (!val) {
       throw new Error('Not a fixed size');
+    }
+
+    if (this.preEncode != null) {
+      this.preEncode.call(val);
     }
 
     const ctx = {
@@ -131,8 +135,5 @@ class VersionedStruct extends Struct {
       const ptr = ctx.pointers[i++];
       ptr.type.encode(stream, ptr.val, ptr.parent);
     }
-
   }
 }
-
-module.exports = VersionedStruct;

@@ -5,7 +5,7 @@ const ENCODING_MAPPING = {
   utf16be: 'utf-16be'
 }
 
-class DecodeStream {
+export class DecodeStream {
   constructor(buffer) {
     this.buffer = buffer;
     this.view = new DataView(buffer.buffer, buffer.byteOffset, buffer.byteLength);
@@ -83,5 +83,3 @@ for (let key of Object.getOwnPropertyNames(DataView.prototype)) {
     }
   }
 }
-
-module.exports = DecodeStream;

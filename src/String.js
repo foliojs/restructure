@@ -1,8 +1,10 @@
-const {Number:NumberT} = require('./Number');
-const utils = require('./utils');
+import {Base} from './Base.js';
+import {Number as NumberT} from './Number.js';
+import * as utils from './utils.js';
 
-class StringT {
+class StringT extends Base {
   constructor(length, encoding = 'ascii') {
+    super();
     this.length = length;
     this.encoding = encoding;
   }
@@ -123,4 +125,4 @@ function byteLength(string, encoding) {
   }
 }
 
-module.exports = StringT;
+export {StringT as String};

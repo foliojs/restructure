@@ -1,8 +1,10 @@
-const {Number:NumberT} = require('./Number');
-const utils = require('./utils');
+import {Base} from './Base.js';
+import {Number as NumberT} from './Number.js';
+import * as utils from './utils.js';
 
-class ArrayT {
+class ArrayT extends Base {
   constructor(type, length, lengthType = 'count') {
+    super();
     this.type = type;
     this.length = length;
     this.lengthType = lengthType;
@@ -52,7 +54,7 @@ class ArrayT {
     return res;
   }
 
-  size(array, ctx) {
+  size(array, ctx, includePointers = true) {
     if (!array) {
       return this.type.size(null, ctx) * utils.resolveLength(this.length, null, ctx);
     }
@@ -60,13 +62,17 @@ class ArrayT {
     let size = 0;
     if (this.length instanceof NumberT) {
       size += this.length.size();
-      ctx = {parent: ctx};
+      ctx = {parent: ctx, pointerSize: 0};
     }
 
     for (let item of array) {
       size += this.type.size(item, ctx);
     }
 
+    if (ctx && includePointers) {
+      size += ctx.pointerSize;
+    }
+    
     return size;
   }
 
@@ -79,7 +85,7 @@ class ArrayT {
         parent
       };
 
-      ctx.pointerOffset = stream.pos + this.size(array, ctx);
+      ctx.pointerOffset = stream.pos + this.size(array, ctx, false);
       this.length.encode(stream, array.length);
     }
 
@@ -88,14 +94,11 @@ class ArrayT {
     }
 
     if (this.length instanceof NumberT) {
-      let i = 0;
-      while (i < ctx.pointers.length) {
-        const ptr = ctx.pointers[i++];
+      for (let ptr of ctx.pointers) {
         ptr.type.encode(stream, ptr.val);
       }
     }
-
   }
 }
 
-module.exports = ArrayT;
+export {ArrayT as Array};

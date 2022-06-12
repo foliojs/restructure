@@ -1,7 +1,9 @@
-const utils = require('./utils');
+import {Base} from './Base.js';
+import * as utils from './utils.js';
 
-class Struct {
+export class Struct extends Base {
   constructor(fields = {}) {
+    super();
     this.fields = fields;
   }
 
@@ -52,9 +54,7 @@ class Struct {
 
   }
 
-  size(val, parent, includePointers) {
-    if (val == null) { val = {}; }
-    if (includePointers == null) { includePointers = true; }
+  size(val = {}, parent, includePointers = true) {
     const ctx = {
       parent,
       val,
@@ -104,8 +104,5 @@ class Struct {
       const ptr = ctx.pointers[i++];
       ptr.type.encode(stream, ptr.val, ptr.parent);
     }
-
   }
 }
-
-module.exports = Struct;

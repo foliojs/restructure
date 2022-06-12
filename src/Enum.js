@@ -1,8 +1,12 @@
-class Enum {
+import {Base} from './Base.js';
+
+export class Enum extends Base {
   constructor(type, options = []) {
+    super();
     this.type = type;
     this.options = options;
   }
+  
   decode(stream) {
     const index = this.type.decode(stream);
     return this.options[index] || index;
@@ -21,5 +25,3 @@ class Enum {
     return this.type.encode(stream, index);
   }
 }
-
-module.exports = Enum;

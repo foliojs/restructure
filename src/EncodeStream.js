@@ -1,38 +1,18 @@
-const stream = require('stream');
-const DecodeStream = require('./DecodeStream');
+import {DecodeStream} from './DecodeStream.js';
 
 const textEncoder = new TextEncoder();
 const isBigEndian = new Uint8Array(new Uint16Array([0x1234]).buffer)[0] == 0x12;
 
-class EncodeStream extends stream.Readable {
-  constructor(bufferSize = 65536) {
-    super(...arguments);
-    this.buffer = new Uint8Array(bufferSize);
+export class EncodeStream {
+  constructor(buffer) {
+    this.buffer = buffer;
     this.view = new DataView(this.buffer.buffer);
-    this.bufferOffset = 0;
     this.pos = 0;
   }
 
-  // do nothing, required by node
-  _read() { }
-
-  ensure(bytes) {
-    if ((this.bufferOffset + bytes) > this.buffer.length) {
-      return this.flush();
-    }
-  }
-
-  flush() {
-    if (this.bufferOffset > 0) {
-      this.push(new Uint8Array(this.buffer.slice(0, this.bufferOffset)));
-      return this.bufferOffset = 0;
-    }
-  }
-
   writeBuffer(buffer) {
-    this.flush();
-    this.push(buffer);
-    return this.pos += buffer.length;
+    this.buffer.set(buffer, this.pos);
+    this.pos += buffer.length;
   }
 
   writeString(string, encoding = 'ascii') {
@@ -65,53 +45,42 @@ class EncodeStream extends stream.Readable {
   }
 
   writeUInt24BE(val) {
-    this.ensure(3);
-    this.buffer[this.bufferOffset++] = (val >>> 16) & 0xff;
-    this.buffer[this.bufferOffset++] = (val >>> 8) & 0xff;
-    this.buffer[this.bufferOffset++] = val & 0xff;
-    return this.pos += 3;
+    this.buffer[this.pos++] = (val >>> 16) & 0xff;
+    this.buffer[this.pos++] = (val >>> 8) & 0xff;
+    this.buffer[this.pos++] = val & 0xff;
   }
 
   writeUInt24LE(val) {
-    this.ensure(3);
-    this.buffer[this.bufferOffset++] = val & 0xff;
-    this.buffer[this.bufferOffset++] = (val >>> 8) & 0xff;
-    this.buffer[this.bufferOffset++] = (val >>> 16) & 0xff;
-    return this.pos += 3;
+    this.buffer[this.pos++] = val & 0xff;
+    this.buffer[this.pos++] = (val >>> 8) & 0xff;
+    this.buffer[this.pos++] = (val >>> 16) & 0xff;
   }
 
   writeInt24BE(val) {
     if (val >= 0) {
-      return this.writeUInt24BE(val);
+      this.writeUInt24BE(val);
     } else {
-      return this.writeUInt24BE(val + 0xffffff + 1);
+      this.writeUInt24BE(val + 0xffffff + 1);
     }
   }
 
   writeInt24LE(val) {
     if (val >= 0) {
-      return this.writeUInt24LE(val);
+      this.writeUInt24LE(val);
     } else {
-      return this.writeUInt24LE(val + 0xffffff + 1);
+      this.writeUInt24LE(val + 0xffffff + 1);
     }
   }
 
   fill(val, length) {
     if (length < this.buffer.length) {
-      this.ensure(length);
-      this.buffer.fill(val, this.bufferOffset, this.bufferOffset + length);
-      this.bufferOffset += length;
-      return this.pos += length;
+      this.buffer.fill(val, this.pos, this.pos + length);
+      this.pos += length;
     } else {
       const buf = new Uint8Array(length);
       buf.fill(val);
-      return this.writeBuffer(buf);
+      this.writeBuffer(buf);
     }
-  }
-
-  end() {
-    this.flush();
-    return this.push(null);
   }
 }
 
@@ -146,21 +115,15 @@ for (let key of Object.getOwnPropertyNames(DataView.prototype)) {
     }
     let bytes = DecodeStream.TYPES[type];
     EncodeStream.prototype['write' + type + (bytes === 1 ? '' : 'BE')] = function (value) {
-      this.ensure(bytes);
-      this.view[key](this.bufferOffset, value, false);
-      this.bufferOffset += bytes;
-      return this.pos += bytes;
+      this.view[key](this.pos, value, false);
+      this.pos += bytes;
     };
 
     if (bytes !== 1) {
       EncodeStream.prototype['write' + type + 'LE'] = function (value) {
-        this.ensure(bytes);
-        this.view[key](this.bufferOffset, value, true);
-        this.bufferOffset += bytes;
-        return this.pos += bytes;
+        this.view[key](this.pos, value, true);
+        this.pos += bytes;
       };
     }
   }
 }
-
-module.exports = EncodeStream;

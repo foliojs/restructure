@@ -1,8 +1,10 @@
-const utils = require('./utils');
-const {Number:NumberT} = require('./Number');
+import {Base} from './Base.js';
+import {Number as NumberT} from './Number.js';
+import * as utils from './utils.js';
 
-class BufferT {
+export class BufferT extends Base {
   constructor(length) {
+    super();
     this.length = length;
   }
   decode(stream, parent) {
@@ -15,7 +17,12 @@ class BufferT {
       return utils.resolveLength(this.length, null, parent);
     }
 
-    return val.length;
+    let len = val.length;
+    if (this.length instanceof NumberT) {
+      len += this.length.size();
+    }
+
+    return len;
   }
 
   encode(stream, buf, parent) {
@@ -27,4 +34,4 @@ class BufferT {
   }
 }
 
-module.exports = BufferT;
+export {BufferT as Buffer};

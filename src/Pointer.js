@@ -1,7 +1,9 @@
-const utils = require('./utils');
+import * as utils from './utils.js';
+import {Base} from './Base.js';
 
-class Pointer {
+export class Pointer extends Base {
   constructor(offsetType, type, options = {}) {
+    super();
     this.offsetType = offsetType;
     this.type = type;
     this.options = options;
@@ -155,12 +157,9 @@ class Pointer {
 }
 
 // A pointer whose type is determined at decode time
-class VoidPointer {
+export class VoidPointer {
   constructor(type, value) {
     this.type = type;
     this.value = value;
   }
 }
-
-exports.Pointer = Pointer;
-exports.VoidPointer = VoidPointer;

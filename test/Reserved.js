@@ -1,35 +1,26 @@
-const {Reserved, uint8, uint16, DecodeStream, EncodeStream} = require('../');
-const should = require('chai').should();
-const concat = require('concat-stream');
+import assert from 'assert';
+import {Reserved, uint8, uint16, DecodeStream, EncodeStream} from 'restructure';
 
 describe('Reserved', function() {
   it('should have a default count of 1', function() {
     const reserved = new Reserved(uint8);
-    return reserved.size().should.equal(1);
+    assert.equal(reserved.size(), 1);
   });
 
   it('should allow custom counts and types', function() {
     const reserved = new Reserved(uint16, 10);
-    return reserved.size().should.equal(20);
+    assert.equal(reserved.size(), 20);
   });
 
   it('should decode', function() {
-    const stream = new DecodeStream(Buffer.from([0, 0]));
+    const stream = new DecodeStream(new Uint8Array([0, 0]));
     const reserved = new Reserved(uint16);
-    should.not.exist(reserved.decode(stream));
-    return stream.pos.should.equal(2);
+    assert.equal(reserved.decode(stream), null);
+    assert.equal(stream.pos, 2);
   });
 
-  return it('should encode', function(done) {
-    const stream = new EncodeStream;
+  it('should encode', function() {
     const reserved = new Reserved(uint16);
-    stream.pipe(concat(function(buf) {
-      buf.should.deep.equal(Buffer.from([0, 0]));
-      return done();
-    })
-    );
-
-    reserved.encode(stream);
-    return stream.end();
+    assert.deepEqual(reserved.toBuffer(), new Uint8Array([0, 0]));
   });
 });

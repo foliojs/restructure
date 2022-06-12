@@ -1,24 +1,21 @@
-const {Struct, String:StringT, Pointer, uint8, DecodeStream, EncodeStream} = require('../');
-const should = require('chai').should();
-const concat = require('concat-stream');
+import assert from 'assert';
+import {Struct, String as StringT, Pointer, uint8, DecodeStream, EncodeStream} from 'restructure';
 
 describe('Struct', function() {
   describe('decode', function() {
     it('should decode into an object', function() {
-      const stream = new DecodeStream(Buffer.from('\x05devon\x15'));
       const struct = new Struct({
         name: new StringT(uint8),
         age: uint8
       });
 
-      return struct.decode(stream).should.deep.equal({
+      assert.deepEqual(struct.fromBuffer(Buffer.from('\x05devon\x15')), {
         name: 'devon',
         age: 21
       });
     });
 
     it('should support process hook', function() {
-      const stream = new DecodeStream(Buffer.from('\x05devon\x20'));
       const struct = new Struct({
         name: new StringT(uint8),
         age: uint8
@@ -28,22 +25,21 @@ describe('Struct', function() {
         return this.canDrink = this.age >= 21;
       };
 
-      return struct.decode(stream).should.deep.equal({
+      assert.deepEqual(struct.fromBuffer(Buffer.from('\x05devon\x20')), {
         name: 'devon',
         age: 32,
         canDrink: true
       });
     });
 
-    return it('should support function keys', function() {
-      const stream = new DecodeStream(Buffer.from('\x05devon\x20'));
+    it('should support function keys', function() {
       const struct = new Struct({
         name: new StringT(uint8),
         age: uint8,
         canDrink() { return this.age >= 21; }
       });
 
-      return struct.decode(stream).should.deep.equal({
+      assert.deepEqual(struct.fromBuffer(Buffer.from('\x05devon\x20')), {
         name: 'devon',
         age: 32,
         canDrink: true
@@ -58,7 +54,7 @@ describe('Struct', function() {
         age: uint8
       });
 
-      return struct.size({name: 'devon', age: 21}).should.equal(7);
+      assert.equal(struct.size({name: 'devon', age: 21}), 7);
     });
 
     it('should compute the correct size with pointers', function() {
@@ -74,7 +70,7 @@ describe('Struct', function() {
         ptr: 'hello'
       });
 
-      return size.should.equal(14);
+      assert.equal(size, 14);
     });
 
     it('should get the correct size when no value is given', function() {
@@ -83,51 +79,35 @@ describe('Struct', function() {
         age: uint8
       });
 
-      return struct.size().should.equal(5);
+      assert.equal(struct.size(), 5);
     });
 
-    return it('should throw when getting non-fixed length size and no value is given', function() {
+    it('should throw when getting non-fixed length size and no value is given', function() {
       const struct = new Struct({
         name: new StringT(uint8),
         age: uint8
       });
 
-      return should.throw(() => struct.size()
-      , /not a fixed size/i);
+      assert.throws(() => struct.size(), /not a fixed size/i);
     });
   });
 
-  return describe('encode', function() {
-    it('should encode objects to buffers', function(done) {
-      const stream = new EncodeStream;
-      stream.pipe(concat(function(buf) {
-        buf.should.deep.equal(Buffer.from('\x05devon\x15'));
-        return done();
-      })
-      );
-
+  describe('encode', function() {
+    it('should encode objects to buffers', function() {
       const struct = new Struct({
         name: new StringT(uint8),
         age: uint8
       });
 
-      struct.encode(stream, {
+      const buf = struct.toBuffer({
         name: 'devon',
         age: 21
-      }
-      );
+      });
 
-      return stream.end();
+      assert.deepEqual(buf, Buffer.from('\x05devon\x15'));
     });
 
-    it('should support preEncode hook', function(done) {
-      const stream = new EncodeStream;
-      stream.pipe(concat(function(buf) {
-        buf.should.deep.equal(Buffer.from('\x05devon\x15'));
-        return done();
-      })
-      );
-
+    it('should support preEncode hook', function() {
       const struct = new Struct({
         nameLength: uint8,
         name: new StringT('nameLength'),
@@ -138,37 +118,28 @@ describe('Struct', function() {
         return this.nameLength = this.name.length;
       };
 
-      struct.encode(stream, {
+      const buf = struct.toBuffer({
         name: 'devon',
         age: 21
-      }
-      );
+      });
 
-      return stream.end();
+      assert.deepEqual(buf, Buffer.from('\x05devon\x15'));
     });
 
-    return it('should encode pointer data after structure', function(done) {
-      const stream = new EncodeStream;
-      stream.pipe(concat(function(buf) {
-        buf.should.deep.equal(Buffer.from('\x05devon\x15\x08\x05hello'));
-        return done();
-      })
-      );
-
+    it('should encode pointer data after structure', function() {
       const struct = new Struct({
         name: new StringT(uint8),
         age: uint8,
         ptr: new Pointer(uint8, new StringT(uint8))
       });
 
-      struct.encode(stream, {
+      const buf = struct.toBuffer({
         name: 'devon',
         age: 21,
         ptr: 'hello'
-      }
-      );
+      });
 
-      return stream.end();
+      assert.deepEqual(buf, Buffer.from('\x05devon\x15\x08\x05hello'));
     });
   });
 });
