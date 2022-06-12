@@ -98,7 +98,9 @@ export class Pointer extends Base {
     }
 
     if (val && ctx) {
-      ctx.pointerSize += type.size(val, parent);
+      // Must be written as two separate lines rather than += in case `type.size` mutates ctx.pointerSize.
+      let size = type.size(val, parent);
+      ctx.pointerSize += size;
     }
 
     return this.offsetType.size();

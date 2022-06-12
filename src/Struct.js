@@ -54,12 +54,17 @@ export class Struct extends Base {
 
   }
 
-  size(val = {}, parent, includePointers = true) {
+  size(val, parent, includePointers = true) {
+    if (val == null) { val = {}; }
     const ctx = {
       parent,
       val,
       pointerSize: 0
     };
+
+    if (this.preEncode != null) {
+      this.preEncode.call(val);
+    }
 
     let size = 0;
     for (let key in this.fields) {

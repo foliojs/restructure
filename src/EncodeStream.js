@@ -6,7 +6,7 @@ const isBigEndian = new Uint8Array(new Uint16Array([0x1234]).buffer)[0] == 0x12;
 export class EncodeStream {
   constructor(buffer) {
     this.buffer = buffer;
-    this.view = new DataView(this.buffer.buffer);
+    this.view = new DataView(this.buffer.buffer, this.buffer.byteOffset, this.buffer.byteLength);
     this.pos = 0;
   }
 

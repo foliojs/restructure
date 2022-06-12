@@ -7,6 +7,7 @@ export class BufferT extends Base {
     super();
     this.length = length;
   }
+  
   decode(stream, parent) {
     const length = utils.resolveLength(this.length, stream, parent);
     return stream.readBuffer(length);

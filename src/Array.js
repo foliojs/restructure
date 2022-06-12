@@ -69,7 +69,7 @@ class ArrayT extends Base {
       size += this.type.size(item, ctx);
     }
 
-    if (ctx && includePointers) {
+    if (ctx && includePointers && this.length instanceof NumberT) {
       size += ctx.pointerSize;
     }
     
@@ -94,8 +94,10 @@ class ArrayT extends Base {
     }
 
     if (this.length instanceof NumberT) {
-      for (let ptr of ctx.pointers) {
-        ptr.type.encode(stream, ptr.val);
+      let i = 0;
+      while (i < ctx.pointers.length) {
+        const ptr = ctx.pointers[i++];
+        ptr.type.encode(stream, ptr.val, ptr.parent);
       }
     }
   }
