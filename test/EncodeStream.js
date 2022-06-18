@@ -1,197 +1,104 @@
-const {EncodeStream} = require('../');
-const should = require('chai').should();
-const concat = require('concat-stream');
+import {EncodeStream} from 'restructure';
+import assert from 'assert';
 
 describe('EncodeStream', function() {
-  it('should write a buffer', function(done) {
-    const stream = new EncodeStream;
-    stream.pipe(concat(function(buf) {
-      buf.should.deep.equal(Buffer.from([1,2,3]));
-      return done();
-    })
-    );
-
-    stream.writeBuffer(Buffer.from([1,2,3]));
-    return stream.end();
+  it('should write a buffer', function() {
+    const stream = new EncodeStream(new Uint8Array(3));
+    stream.writeBuffer(new Uint8Array([1,2,3]));
+    assert.deepEqual(stream.buffer, new Uint8Array([1,2,3]));
   });
 
-  it('should writeUInt16BE', function(done) {
-    const stream = new EncodeStream;
-    stream.pipe(concat(function(buf) {
-      buf.should.deep.equal(Buffer.from([0xab, 0xcd]));
-      return done();
-    })
-    );
-
+  it('should writeUInt16BE', function() {
+    const stream = new EncodeStream(new Uint8Array(2));
     stream.writeUInt16BE(0xabcd);
-    return stream.end();
+    assert.deepEqual(stream.buffer, new Uint8Array([0xab, 0xcd]));
   });
 
-  it('should writeUInt16LE', function(done) {
-    const stream = new EncodeStream;
-    stream.pipe(concat(function(buf) {
-      buf.should.deep.equal(Buffer.from([0xab, 0xcd]));
-      return done();
-    })
-    );
-
+  it('should writeUInt16LE', function() {
+    const stream = new EncodeStream(new Uint8Array(2));
     stream.writeUInt16LE(0xcdab);
-    return stream.end();
+    assert.deepEqual(stream.buffer, new Uint8Array([0xab, 0xcd]));
   });
 
-  it('should writeUInt24BE', function(done) {
-    const stream = new EncodeStream;
-    stream.pipe(concat(function(buf) {
-      buf.should.deep.equal(Buffer.from([0xab, 0xcd, 0xef]));
-      return done();
-    })
-    );
-
+  it('should writeUInt24BE', function() {
+    const stream = new EncodeStream(new Uint8Array(3));
     stream.writeUInt24BE(0xabcdef);
-    return stream.end();
+    assert.deepEqual(stream.buffer, new Uint8Array([0xab, 0xcd, 0xef]));
   });
 
-  it('should writeUInt24LE', function(done) {
-    const stream = new EncodeStream;
-    stream.pipe(concat(function(buf) {
-      buf.should.deep.equal(Buffer.from([0xef, 0xcd, 0xab]));
-      return done();
-    })
-    );
-
+  it('should writeUInt24LE', function() {
+    const stream = new EncodeStream(new Uint8Array(3));
     stream.writeUInt24LE(0xabcdef);
-    return stream.end();
+    assert.deepEqual(stream.buffer, new Uint8Array([0xef, 0xcd, 0xab]));
   });
 
-  it('should writeInt24BE', function(done) {
-    const stream = new EncodeStream;
-    stream.pipe(concat(function(buf) {
-      buf.should.deep.equal(Buffer.from([0xff, 0xab, 0x24, 0xab, 0xcd, 0xef]));
-      return done();
-    })
-    );
-
+  it('should writeInt24BE', function() {
+    const stream = new EncodeStream(new Uint8Array(6));
     stream.writeInt24BE(-21724);
     stream.writeInt24BE(0xabcdef);
-    return stream.end();
+    assert.deepEqual(stream.buffer, new Uint8Array([0xff, 0xab, 0x24, 0xab, 0xcd, 0xef]));
   });
 
-  it('should writeInt24LE', function(done) {
-    const stream = new EncodeStream;
-    stream.pipe(concat(function(buf) {
-      buf.should.deep.equal(Buffer.from([0x24, 0xab, 0xff, 0xef, 0xcd, 0xab]));
-      return done();
-    })
-    );
-
+  it('should writeInt24LE', function() {
+    const stream = new EncodeStream(new Uint8Array(6));
     stream.writeInt24LE(-21724);
     stream.writeInt24LE(0xabcdef);
-    return stream.end();
+    assert.deepEqual(stream.buffer, new Uint8Array([0x24, 0xab, 0xff, 0xef, 0xcd, 0xab]));
   });
 
-  it('should fill', function(done) {
-    const stream = new EncodeStream;
-    stream.pipe(concat(function(buf) {
-      buf.should.deep.equal(Buffer.from([10, 10, 10, 10, 10]));
-      return done();
-    })
-    );
-
+  it('should fill', function() {
+    const stream = new EncodeStream(new Uint8Array(5));
     stream.fill(10, 5);
-    return stream.end();
+    assert.deepEqual(stream.buffer, new Uint8Array([10, 10, 10, 10, 10]));
   });
 
-  return describe('writeString', function() {
-    it('should encode ascii by default', function(done) {
-      const stream = new EncodeStream;
-      stream.pipe(concat(function(buf) {
-        buf.should.deep.equal(Buffer.from('some text', 'ascii'));
-        return done();
-      })
-      );
-
+  describe('writeString', function() {
+    it('should encode ascii by default', function() {
+      const expected = Buffer.from('some text', 'ascii');
+      const stream = new EncodeStream(new Uint8Array(expected.length));
       stream.writeString('some text');
-      return stream.end();
+      assert.deepEqual(stream.buffer, expected);
     });
 
-    it('should encode ascii', function(done) {
-      const stream = new EncodeStream;
-      stream.pipe(concat(function(buf) {
-        buf.should.deep.equal(Buffer.from('some text', 'ascii'));
-        return done();
-      })
-      );
-
-      stream.writeString('some text');
-      return stream.end();
+    it('should encode ascii', function() {
+      const expected = Buffer.from('some text', 'ascii');
+      const stream = new EncodeStream(new Uint8Array(expected.length));
+      stream.writeString('some text', 'ascii');
+      assert.deepEqual(stream.buffer, expected);
     });
 
-    it('should encode utf8', function(done) {
-      const stream = new EncodeStream;
-      stream.pipe(concat(function(buf) {
-        buf.should.deep.equal(Buffer.from('unicode! 👍', 'utf8'));
-        return done();
-      })
-      );
-
+    it('should encode utf8', function() {
+      const expected = Buffer.from('unicode! 👍', 'utf8');
+      const stream = new EncodeStream(new Uint8Array(expected.length));
       stream.writeString('unicode! 👍', 'utf8');
-      return stream.end();
+      assert.deepEqual(stream.buffer, expected);
     });
 
-    it('should encode utf16le', function(done) {
-      const stream = new EncodeStream;
-      stream.pipe(concat(function(buf) {
-        buf.should.deep.equal(Buffer.from('unicode! 👍', 'utf16le'));
-        return done();
-      })
-      );
-
+    it('should encode utf16le', function() {
+      const expected = Buffer.from('unicode! 👍', 'utf16le');
+      const stream = new EncodeStream(new Uint8Array(expected.length));
       stream.writeString('unicode! 👍', 'utf16le');
-      return stream.end();
+      assert.deepEqual(stream.buffer, expected);
     });
 
-    it('should encode ucs2', function(done) {
-      const stream = new EncodeStream;
-      stream.pipe(concat(function(buf) {
-        buf.should.deep.equal(Buffer.from('unicode! 👍', 'ucs2'));
-        return done();
-      })
-      );
-
+    it('should encode ucs2', function() {
+      const expected = Buffer.from('unicode! 👍', 'ucs2');
+      const stream = new EncodeStream(new Uint8Array(expected.length));
       stream.writeString('unicode! 👍', 'ucs2');
-      return stream.end();
+      assert.deepEqual(stream.buffer, expected);
     });
 
-    it('should encode utf16be', function(done) {
-      const stream = new EncodeStream;
-      stream.pipe(concat(function(out) {
-        const buf = Buffer.from('unicode! 👍', 'utf16le');
-        for (let i = 0, end = buf.length - 1; i < end; i += 2) {
-          const byte = buf[i];
-          buf[i] = buf[i + 1];
-          buf[i + 1] = byte;
-        }
+    it('should encode utf16be', function() {
+      const expected = Buffer.from('unicode! 👍', 'utf16le');
+      for (let i = 0, end = expected.length - 1; i < end; i += 2) {
+        const byte = expected[i];
+        expected[i] = expected[i + 1];
+        expected[i + 1] = byte;
+      }
 
-        out.should.deep.equal(buf);
-        return done();
-      })
-      );
-
+      const stream = new EncodeStream(new Uint8Array(expected.length));
       stream.writeString('unicode! 👍', 'utf16be');
-      return stream.end();
-    });
-
-    return it('should encode macroman', function(done) {
-      const stream = new EncodeStream;
-      stream.pipe(concat(function(out) {
-        const buf = Buffer.from([0x8a, 0x63, 0x63, 0x65, 0x6e, 0x74, 0x65, 0x64, 0x20, 0x63, 0x68, 0x87, 0x72, 0x61, 0x63, 0x74, 0x65, 0x72, 0x73]);
-        out.should.deep.equal(buf);
-        return done();
-      })
-      );
-
-      stream.writeString('äccented cháracters', 'mac');
-      return stream.end();
+      assert.deepEqual(stream.buffer, expected);
     });
   });
 });

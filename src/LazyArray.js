@@ -1,9 +1,8 @@
-const ArrayT = require('./Array');
-const {Number:NumberT} = require('./Number');
-const utils = require('./utils');
-const {inspect} = require('util');
+import {Array as ArrayT} from './Array.js';
+import {Number as NumberT} from './Number.js';
+import * as utils from './utils.js';
 
-class LazyArrayT extends ArrayT {
+export class LazyArray extends ArrayT {
   decode(stream, parent) {
     const { pos } = stream;
     const length = utils.resolveLength(this.length, stream, parent);
@@ -17,14 +16,14 @@ class LazyArrayT extends ArrayT {
       };
     }
 
-    const res = new LazyArray(this.type, length, stream, parent);
+    const res = new LazyArrayValue(this.type, length, stream, parent);
 
     stream.pos += length * this.type.size(null, parent);
     return res;
   }
 
   size(val, ctx) {
-    if (val instanceof LazyArray) {
+    if (val instanceof LazyArrayValue) {
       val = val.toArray();
     }
 
@@ -32,7 +31,7 @@ class LazyArrayT extends ArrayT {
   }
 
   encode(stream, val, ctx) {
-    if (val instanceof LazyArray) {
+    if (val instanceof LazyArrayValue) {
       val = val.toArray();
     }
 
@@ -40,7 +39,7 @@ class LazyArrayT extends ArrayT {
   }
 }
 
-class LazyArray {
+class LazyArrayValue {
   constructor(type, length, stream, ctx) {
     this.type = type;
     this.length = length;
@@ -72,10 +71,4 @@ class LazyArray {
     }
     return result;
   }
-
-  inspect() {
-    return inspect(this.toArray());
-  }
 }
-
-module.exports = LazyArrayT;

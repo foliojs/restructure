@@ -1,19 +1,17 @@
-exports.EncodeStream    = require('./src/EncodeStream');
-exports.DecodeStream    = require('./src/DecodeStream');
-exports.Array           = require('./src/Array');
-exports.LazyArray       = require('./src/LazyArray');
-exports.Bitfield        = require('./src/Bitfield');
-exports.Boolean         = require('./src/Boolean');
-exports.Buffer          = require('./src/Buffer');
-exports.Enum            = require('./src/Enum');
-exports.Optional        = require('./src/Optional');
-exports.Reserved        = require('./src/Reserved');
-exports.String          = require('./src/String');
-exports.Struct          = require('./src/Struct');
-exports.VersionedStruct = require('./src/VersionedStruct');
+export {EncodeStream} from './src/EncodeStream.js';
+export {DecodeStream} from './src/DecodeStream.js';
+export {Array} from './src/Array.js';
+export {LazyArray} from './src/LazyArray.js';
+export {Bitfield} from './src/Bitfield.js';
+export {Boolean} from './src/Boolean.js';
+export {Buffer} from './src/Buffer.js';
+export {Enum} from './src/Enum.js';
+export {Optional} from './src/Optional.js';
+export {Reserved} from './src/Reserved.js';
+export {String} from './src/String.js';
+export {Struct} from './src/Struct.js';
+export {VersionedStruct} from './src/VersionedStruct.js';
 
-const utils             = require('./src/utils');
-const NumberT           = require('./src/Number');
-const Pointer           = require('./src/Pointer');
-
-Object.assign(exports, utils, NumberT, Pointer);
+export * from './src/utils.js';
+export * from './src/Number.js';
+export * from './src/Pointer.js';

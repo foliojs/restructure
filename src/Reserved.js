@@ -1,7 +1,9 @@
-const utils = require('./utils');
+import {Base} from './Base.js';
+import * as utils from './utils.js';
 
-class Reserved {
+export class Reserved extends Base {
   constructor(type, count = 1) {
+    super();
     this.type = type;
     this.count = count;
   }
@@ -19,5 +21,3 @@ class Reserved {
     return stream.fill(0, this.size(val, parent));
   }
 }
-
-module.exports = Reserved;

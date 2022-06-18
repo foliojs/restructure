@@ -17,38 +17,30 @@ This is just a small example of what Restructure can do. Check out the API docum
 below for more information.
 
 ```javascript
-var r = require('restructure');
+import * as r from 'restructure';
 
-var Person = new r.Struct({
+let Person = new r.Struct({
   name: new r.String(r.uint8, 'utf8'),
   age: r.uint8
 });
 
 // decode a person from a buffer
-var stream = new r.DecodeStream(buffer);
-Person.decode(stream); // returns an object with the fields defined above
+let value = Person.fromBuffer(new Uint8Array([/* ... */])); // returns an object with the fields defined above
 
 // encode a person from an object
-// pipe the stream to a destination, such as a file
-var stream = new r.EncodeStream();
-stream.pipe(fs.createWriteStream('out.bin'));
-
-Person.encode(stream, {
+let buffer = Person.toBuffer({
   name: 'Devon',
   age: 21
 });
-
-stream.end();
 ```
-
 
 ## API
 
 All of the following types support three standard methods:
 
-* `decode(stream)` - decodes an instance of the type from the given DecodeStream
+* `fromBuffer(buffer)` - decodes an instance of the type from the given Uint8Array
 * `size(value)` - returns the amount of space the value would take if encoded
-* `encode(stream, value)` - encodes the given value into the given EncodeStream
+* `toBuffer(value)` - encodes the given value into a Uint8Array
 
 Restructure supports a wide variety of types, but if you need to write your own for
 some custom use that cannot be represented by them, you can do so by just implementing
@@ -143,7 +135,7 @@ bitfield.encode(stream, result);
 
 ### Buffer
 
-Extracts a slice of the buffer to a Node `Buffer`.  The length can be a constant, or taken from
+Extracts a slice of the buffer to a `Uint8Array`.  The length can be a constant, or taken from
 a previous field in the parent structure.
 
 ```javascript
@@ -162,8 +154,9 @@ var struct = new r.Struct({
 A `String` maps a JavaScript string to and from binary encodings.  The length can be a constant, taken
 from a previous field in the parent structure, or encoded using a number type immediately before the string.
 
-Supported encodings include `'ascii'`, `'utf8'`, `'ucs2'`, `'utf16le'`, `'utf16be'`, and if you also install
-[iconv-lite](https://github.com/ashtuchkin/iconv-lite), many other legacy codecs.
+Fully supported encodings include `'ascii'`, `'utf8'`, `'ucs2'`, `'utf16le'`, `'utf16be'`. Decoding is also possible
+with any encoding supported by [TextDecoder](https://developer.mozilla.org/en-US/docs/Web/API/Encoding_API/Encodings),
+however encoding these is not supported.
 
 ```javascript
 // fixed length, ascii encoding by default

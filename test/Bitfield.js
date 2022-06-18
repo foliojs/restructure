@@ -1,6 +1,5 @@
-const {Bitfield, uint8, DecodeStream, EncodeStream} = require('../');
-const should = require('chai').should();
-const concat = require('concat-stream');
+import assert from 'assert';
+import {Bitfield, uint8, DecodeStream, EncodeStream} from 'restructure';
 
 describe('Bitfield', function() {
   const bitfield = new Bitfield(uint8, ['Jack', 'Kack', 'Lack', 'Mack', 'Nack', 'Oack', 'Pack', 'Quack']);
@@ -13,23 +12,18 @@ describe('Bitfield', function() {
   const PACK  = 1 << 6;
   const QUACK = 1 << 7;
 
-  it('should have the right size', () => bitfield.size().should.equal(1));
+  it('should have the right size', () => assert.equal(bitfield.size(), 1));
 
   it('should decode', function() {
-    const stream = new DecodeStream(Buffer.from([JACK | MACK | PACK | NACK | QUACK]));
-    return bitfield.decode(stream).should.deep.equal({
-      Jack: true, Kack: false, Lack: false, Mack: true, Nack: true, Oack: false, Pack: true, Quack: true});
+    const buffer = new Uint8Array([JACK | MACK | PACK | NACK | QUACK]);
+    assert.deepEqual(
+      bitfield.fromBuffer(buffer),
+      {Jack: true, Kack: false, Lack: false, Mack: true, Nack: true, Oack: false, Pack: true, Quack: true}
+    );
   });
 
-  return it('should encode', function(done) {
-    const stream = new EncodeStream;
-    stream.pipe(concat(function(buf) {
-      buf.should.deep.equal(Buffer.from([JACK | MACK | PACK | NACK | QUACK]));
-      return done();
-    })
-    );
-
-    bitfield.encode(stream, {Jack: true, Kack: false, Lack: false, Mack: true, Nack: true, Oack: false, Pack: true, Quack: true});
-    return stream.end();
+  it('should encode', function() {
+    let buffer = bitfield.toBuffer({Jack: true, Kack: false, Lack: false, Mack: true, Nack: true, Oack: false, Pack: true, Quack: true});
+    assert.deepEqual(buffer, Buffer.from([JACK | MACK | PACK | NACK | QUACK]));
   });
 });

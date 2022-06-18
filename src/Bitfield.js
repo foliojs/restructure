@@ -1,8 +1,12 @@
-class Bitfield {
+import {Base} from './Base.js';
+
+export class Bitfield extends Base {
   constructor(type, flags = []) {
+    super();
     this.type = type;
     this.flags = flags;
   }
+
   decode(stream) {
     const val = this.type.decode(stream);
 
@@ -33,5 +37,3 @@ class Bitfield {
     return this.type.encode(stream, val);
   }
 }
-
-module.exports = Bitfield;

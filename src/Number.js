@@ -1,7 +1,9 @@
-const DecodeStream = require('./DecodeStream');
+import {DecodeStream} from './DecodeStream.js';
+import {Base} from './Base.js';
 
-class NumberT {
+class NumberT extends Base {
   constructor(type, endian = 'BE') {
+    super();
     this.type = type;
     this.endian = endian;
     this.fn = this.type;
@@ -23,27 +25,36 @@ class NumberT {
   }
 }
 
-exports.Number = NumberT;
-exports.uint8 = new NumberT('UInt8');
-exports.uint16be = (exports.uint16 = new NumberT('UInt16', 'BE'));
-exports.uint16le = new NumberT('UInt16', 'LE');
-exports.uint24be = (exports.uint24 = new NumberT('UInt24', 'BE'));
-exports.uint24le = new NumberT('UInt24', 'LE');
-exports.uint32be = (exports.uint32 = new NumberT('UInt32', 'BE'));
-exports.uint32le = new NumberT('UInt32', 'LE');
-exports.int8 = new NumberT('Int8');
-exports.int16be = (exports.int16 = new NumberT('Int16', 'BE'));
-exports.int16le = new NumberT('Int16', 'LE');
-exports.int24be = (exports.int24 = new NumberT('Int24', 'BE'));
-exports.int24le = new NumberT('Int24', 'LE');
-exports.int32be = (exports.int32 = new NumberT('Int32', 'BE'));
-exports.int32le = new NumberT('Int32', 'LE');
-exports.floatbe = (exports.float = new NumberT('Float', 'BE'));
-exports.floatle = new NumberT('Float', 'LE');
-exports.doublebe = (exports.double = new NumberT('Double', 'BE'));
-exports.doublele = new NumberT('Double', 'LE');
+export {NumberT as Number};
 
-class Fixed extends NumberT {
+export const uint8 = new NumberT('UInt8');
+export const uint16be = new NumberT('UInt16', 'BE');
+export const uint16 = uint16be;
+export const uint16le = new NumberT('UInt16', 'LE');
+export const uint24be = new NumberT('UInt24', 'BE');
+export const uint24 = uint24be;
+export const uint24le = new NumberT('UInt24', 'LE');
+export const uint32be = new NumberT('UInt32', 'BE');
+export const uint32 = uint32be;
+export const uint32le = new NumberT('UInt32', 'LE');
+export const int8 = new NumberT('Int8');
+export const int16be = new NumberT('Int16', 'BE');
+export const int16 = int16be;
+export const int16le = new NumberT('Int16', 'LE');
+export const int24be = new NumberT('Int24', 'BE');
+export const int24 = int24be;
+export const int24le = new NumberT('Int24', 'LE');
+export const int32be = new NumberT('Int32', 'BE');
+export const int32 = int32be;
+export const int32le = new NumberT('Int32', 'LE');
+export const floatbe = new NumberT('Float', 'BE');
+export const float = floatbe;
+export const floatle = new NumberT('Float', 'LE');
+export const doublebe = new NumberT('Double', 'BE');
+export const double = doublebe;
+export const doublele = new NumberT('Double', 'LE');
+
+export class Fixed extends NumberT {
   constructor(size, endian, fracBits = size >> 1) {
     super(`Int${size}`, endian);
     this._point = 1 << fracBits;
@@ -58,8 +69,9 @@ class Fixed extends NumberT {
   }
 }
 
-exports.Fixed = Fixed;
-exports.fixed16be = (exports.fixed16 = new Fixed(16, 'BE'));
-exports.fixed16le = new Fixed(16, 'LE');
-exports.fixed32be = (exports.fixed32 =new Fixed(32, 'BE'));
-exports.fixed32le = new Fixed(32, 'LE');
+export const fixed16be = new Fixed(16, 'BE');
+export const fixed16 = fixed16be;
+export const fixed16le = new Fixed(16, 'LE');
+export const fixed32be = new Fixed(32, 'BE');
+export const fixed32 = fixed32be;
+export const fixed32le = new Fixed(32, 'LE');

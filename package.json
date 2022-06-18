@@ -2,19 +2,25 @@
   "name": "restructure",
   "version": "2.0.1",
   "description": "Declaratively encode and decode binary data",
-  "main": "index.js",
+  "type": "module",
+  "main": "./dist/main.cjs",
+  "module": "./index.js",
+  "source": "./index.js",
+  "exports": {
+    "import": "./index.js",
+    "require": "./dist/main.cjs"
+  },
+  "targets": {
+    "module": false
+  },
   "devDependencies": {
-    "chai": "~4.2.0",
-    "concat-stream": "~2.0.0",
-    "coveralls": "^3.0.11",
-    "iconv-lite": "^0.5.1",
-    "mocha": "~7.1.1",
-    "nyc": "^15.0.1"
+    "mocha": "^10.0.0",
+    "parcel": "^2.6.1"
   },
   "scripts": {
-    "test": "mocha --reporter spec",
-    "cover": "nyc --reporter=html --reporter=text mocha",
-    "coveralls": "nyc report --reporter=text-lcov | coveralls"
+    "test": "mocha",
+    "build": "parcel build",
+    "prepublishOnly": "parcel build"
   },
   "repository": {
     "type": "git",

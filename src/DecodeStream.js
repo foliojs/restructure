@@ -1,39 +1,27 @@
-let iconv;
-try { iconv = require('iconv-lite'); } catch (error) {}
+// Node back-compat.
+const ENCODING_MAPPING = {
+  utf16le: 'utf-16le',
+  ucs2: 'utf-16le',
+  utf16be: 'utf-16be'
+}
 
-class DecodeStream {
+export class DecodeStream {
   constructor(buffer) {
     this.buffer = buffer;
+    this.view = new DataView(buffer.buffer, buffer.byteOffset, buffer.byteLength);
     this.pos = 0;
     this.length = this.buffer.length;
   }
 
   readString(length, encoding = 'ascii') {
-    switch (encoding) {
-      case 'utf16le': case 'ucs2': case 'utf8': case 'ascii':
-        return this.buffer.toString(encoding, this.pos, (this.pos += length));
+    encoding = ENCODING_MAPPING[encoding] || encoding;
 
-      case 'utf16be':
-        var buf = Buffer.from(this.readBuffer(length));
-
-        // swap the bytes
-        for (let i = 0, end = buf.length - 1; i < end; i += 2) {
-          const byte = buf[i];
-          buf[i] = buf[i + 1];
-          buf[i + 1] = byte;
-        }
-
-        return buf.toString('utf16le');
-
-      default:
-        buf = this.readBuffer(length);
-        if (iconv) {
-          try {
-            return iconv.decode(buf, encoding);
-          } catch (error1) {}
-        }
-
-        return buf;
+    let buf = this.readBuffer(length);
+    try {
+      let decoder = new TextDecoder(encoding);
+      return decoder.decode(buf);
+    } catch (err) {
+      return buf;
     }
   }
 
@@ -71,15 +59,27 @@ DecodeStream.TYPES = {
   Double: 8
 };
 
-for (let key in Buffer.prototype) {
-  if (key.slice(0, 4) === 'read') {
-    const bytes = DecodeStream.TYPES[key.replace(/read|[BL]E/g, '')];
-    DecodeStream.prototype[key] = function() {
-      const ret = this.buffer[key](this.pos);
+for (let key of Object.getOwnPropertyNames(DataView.prototype)) {
+  if (key.slice(0, 3) === 'get') {
+    let type = key.slice(3).replace('Ui', 'UI');
+    if (type === 'Float32') {
+      type = 'Float';
+    } else if (type === 'Float64') {
+      type = 'Double';
+    }
+    let bytes = DecodeStream.TYPES[type];
+    DecodeStream.prototype['read' + type + (bytes === 1 ? '' : 'BE')] = function () {
+      const ret = this.view[key](this.pos, false);
       this.pos += bytes;
       return ret;
     };
+
+    if (bytes !== 1) {
+      DecodeStream.prototype['read' + type + 'LE'] = function () {
+        const ret = this.view[key](this.pos, true);
+        this.pos += bytes;
+        return ret;
+      };
+    }
   }
 }
-
-module.exports = DecodeStream;

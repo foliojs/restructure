@@ -1,5 +1,8 @@
-class BooleanT {
+import {Base} from './Base.js';
+
+export class BooleanT extends Base {
   constructor(type) {
+    super();
     this.type = type;
   }
 
@@ -16,4 +19,4 @@ class BooleanT {
   }
 }
 
-module.exports = BooleanT;
+export {BooleanT as Boolean};

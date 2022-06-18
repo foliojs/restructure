@@ -1,6 +1,6 @@
-const {Number:NumberT} = require('./Number');
+import {Number as NumberT} from './Number.js';
 
-exports.resolveLength = function(length, stream, parent) {
+export function resolveLength(length, stream, parent) {
   let res;
   if (typeof length === 'number') {
     res = length;
@@ -22,7 +22,7 @@ exports.resolveLength = function(length, stream, parent) {
   return res;
 };
 
-class PropertyDescriptor {
+export class PropertyDescriptor {
   constructor(opts = {}) {
     this.enumerable = true;
     this.configurable = true;
@@ -33,5 +33,3 @@ class PropertyDescriptor {
     }
   }
 }
-
-exports.PropertyDescriptor = PropertyDescriptor;

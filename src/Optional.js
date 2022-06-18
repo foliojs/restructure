@@ -1,5 +1,8 @@
-class Optional {
+import {Base} from './Base.js';
+
+export class Optional extends Base {
   constructor(type, condition = true) {
+    super();
     this.type = type;
     this.condition = condition;
   }
@@ -39,5 +42,3 @@ class Optional {
     }
   }
 }
-
-module.exports = Optional;
