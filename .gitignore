@@ -2,3 +2,5 @@
 coverage.html
 coverage/
 node_modules/
+.parcel-cache
+dist

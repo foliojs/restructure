@@ -3,17 +3,24 @@
   "version": "2.0.1",
   "description": "Declaratively encode and decode binary data",
   "type": "module",
-  "main": "index.js",
+  "main": "./dist/main.cjs",
+  "module": "./index.js",
+  "source": "./index.js",
   "exports": {
-    "import": "./index.js"
+    "import": "./index.js",
+    "require": "./dist/main.cjs"
+  },
+  "targets": {
+    "module": false
   },
   "devDependencies": {
-    "mocha": "^10.0.0"
+    "mocha": "^10.0.0",
+    "parcel": "^2.6.1"
   },
   "scripts": {
     "test": "mocha",
-    "cover": "nyc --reporter=html --reporter=text mocha",
-    "coveralls": "nyc report --reporter=text-lcov | coveralls"
+    "build": "parcel build",
+    "prepublishOnly": "parcel build"
   },
   "repository": {
     "type": "git",
