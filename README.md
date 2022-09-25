@@ -151,8 +151,9 @@ var struct = new r.Struct({
 
 ### String
 
-A `String` maps a JavaScript string to and from binary encodings.  The length can be a constant, taken
-from a previous field in the parent structure, or encoded using a number type immediately before the string.
+A `String` maps a JavaScript string to and from binary encodings.  The length, in bytes, can be a constant,
+taken from a previous field in the parent structure, encoded using a number type immediately before the
+string.
 
 Fully supported encodings include `'ascii'`, `'utf8'`, `'ucs2'`, `'utf16le'`, `'utf16be'`. Decoding is also possible
 with any encoding supported by [TextDecoder](https://developer.mozilla.org/en-US/docs/Web/API/Encoding_API/Encodings),
@@ -172,7 +173,7 @@ var struct = new r.Struct({
 });
 
 // null-terminated string (also known as C string)
-var str = new r.String(null, 'utf8')
+var str = new r.String(null, 'utf8');
 ```
 
 ### Array
