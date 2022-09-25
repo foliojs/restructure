@@ -46,7 +46,7 @@ class StringT extends Base {
 
   size(val, parent) {
     // Use the defined value if no value was given
-    if (!val) {
+    if (val === undefined || val === null) {
       return utils.resolveLength(this.length, null, parent);
     }
 
