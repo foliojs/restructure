@@ -12,28 +12,33 @@ class StringT extends Base {
   decode(stream, parent) {
     let length, pos;
 
+    let { encoding } = this;
+    if (typeof encoding === 'function') {
+      encoding = encoding.call(parent, parent) || 'ascii';
+    }
+    let width = encodingWidth(encoding);
+
     if (this.length != null) {
       length = utils.resolveLength(this.length, stream, parent);
     } else {
       let buffer;
       ({buffer, length, pos} = stream);
 
-      while ((pos < length) && (buffer[pos] !== 0x00)) {
-        ++pos;
+      while ((pos < length - width + 1) &&
+        (buffer[pos] !== 0x00 ||
+        (width === 2 && buffer[pos+1] !== 0x00)
+        )) {
+        pos += width;
       }
 
       length = pos - stream.pos;
     }
 
-    let { encoding } = this;
-    if (typeof encoding === 'function') {
-      encoding = encoding.call(parent, parent) || 'ascii';
-    }
 
     const string = stream.readString(length, encoding);
 
     if ((this.length == null) && (stream.pos < stream.length)) {
-      stream.pos++;
+      stream.pos+=width;
     }
 
     return string;
@@ -41,7 +46,7 @@ class StringT extends Base {
 
   size(val, parent) {
     // Use the defined value if no value was given
-    if (!val) {
+    if (val === undefined || val === null) {
       return utils.resolveLength(this.length, null, parent);
     }
 
@@ -60,7 +65,7 @@ class StringT extends Base {
     }
 
     if ((this.length == null)) {
-      size++;
+      size += encodingWidth(encoding);
     }
 
     return size;
@@ -79,8 +84,26 @@ class StringT extends Base {
     stream.writeString(val, encoding);
 
     if ((this.length == null)) {
-      return stream.writeUInt8(0x00);
+      return encodingWidth(encoding) == 2 ?
+        stream.writeUInt16LE(0x0000) :
+        stream.writeUInt8(0x00);
     }
+  }
+}
+
+function encodingWidth(encoding) {
+  switch(encoding) {
+    case 'ascii':
+    case 'utf8': // utf8 is a byte-based encoding for zero-term string
+      return 1;
+    case 'utf16le':
+    case 'utf16-le':
+    case 'utf16be':
+    case 'utf16-be':
+    case 'ucs2':
+      return 2;
+    default:
+      throw new Error('Unknown encoding ' + encoding);
   }
 }
 
