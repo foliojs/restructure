@@ -1,5 +1,5 @@
 import assert from 'assert';
-import {String as StringT, uint8, DecodeStream, EncodeStream} from 'restructure';
+import {String as StringT, uint16le, uint8, DecodeStream, Struct} from 'restructure';
 
 describe('String', function() {
   describe('decode', function() {
@@ -40,6 +40,18 @@ describe('String', function() {
       const string = new StringT(null, 'utf8');
       assert.equal(string.fromBuffer(Buffer.from('🍻')), '🍻');
     });
+
+    it('should decode two-byte null-terminated string for utf16le', function() {
+      const stream = new DecodeStream(Buffer.from('🍻\x00', 'utf16le'));
+      const string = new StringT(null, 'utf16le');
+      assert.equal(string.decode(stream), '🍻');
+      assert.equal(stream.pos, 6);
+    });
+
+    it('should decode remainder of buffer when null-byte missing, utf16le', function() {
+      const string = new StringT(null, 'utf16le');
+      assert.equal(string.fromBuffer(Buffer.from('🍻', 'utf16le')), '🍻');
+    });
   });
 
   describe('size', function() {
@@ -71,6 +83,11 @@ describe('String', function() {
     it('should take null-byte into account', function() {
       const string = new StringT(null, 'utf8');
       assert.equal(string.size('🍻'), 5);
+    });
+
+    it('should take null-byte into account, utf16le', function() {
+      const string = new StringT(null, 'utf16le');
+      assert.equal(string.size('🍻'), 6);
     });
 
     it('should use defined length if no value given', function() {
@@ -108,6 +125,21 @@ describe('String', function() {
     it('should encode null-terminated string', function() {
       const string = new StringT(null, 'utf8');
       assert.deepEqual(string.toBuffer('🍻'), Buffer.from('🍻\x00'));
+    });
+
+    it('should encode using string length, utf16le', function() {
+      const string = new StringT(16, 'utf16le');
+      assert.deepEqual(string.toBuffer('testing'), Buffer.from('testing', 'utf16le'));
+    });
+
+    it('should encode length as number before string utf16le', function() {
+      const string = new StringT(uint16le, 'utf16le');
+      assert.deepEqual(string.toBuffer('testing 😜'), Buffer.from('\u0014testing 😜', 'utf16le'));
+    });
+
+    it('should encode two-byte null-terminated string for UTF-16', function() {
+      const string = new StringT(null, 'utf16le');
+      assert.deepEqual(string.toBuffer('🍻'), Buffer.from('🍻\x00', 'utf16le'));
     });
   });
 });
