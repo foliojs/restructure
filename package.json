@@ -1,6 +1,6 @@
 {
   "name": "restructure",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "Declaratively encode and decode binary data",
   "type": "module",
   "main": "./dist/main.cjs",
