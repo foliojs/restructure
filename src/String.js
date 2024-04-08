@@ -98,12 +98,16 @@ function encodingWidth(encoding) {
       return 1;
     case 'utf16le':
     case 'utf16-le':
+    case 'utf-16be':
+    case 'utf-16le':
     case 'utf16be':
     case 'utf16-be':
     case 'ucs2':
       return 2;
     default:
-      throw new Error('Unknown encoding ' + encoding);
+      //TODO: assume all other encodings are 1-byters
+      //throw new Error('Unknown encoding ' + encoding);
+      return 1;
   }
 }
 
