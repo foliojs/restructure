@@ -1,3 +1,4 @@
+export {Base} from './src/Base.js';
 export {EncodeStream} from './src/EncodeStream.js';
 export {DecodeStream} from './src/DecodeStream.js';
 export {Array} from './src/Array.js';
