@@ -10,6 +10,11 @@
     "import": "./index.js",
     "require": "./dist/main.cjs"
   },
+  "files": [
+    "dist",
+    "src",
+    "index.js"
+  ],
   "targets": {
     "module": false
   },
