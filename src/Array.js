@@ -46,6 +46,11 @@ class ArrayT extends Base {
       }
 
     } else {
+      // A count larger than the remaining bytes cannot be decoded and would allocate unbounded.
+      if (length > stream.length - stream.pos) {
+        throw new Error('Array length exceeds stream length');
+      }
+
       for (let i = 0, end = length; i < end; i++) {
         res.push(this.type.decode(stream, ctx));
       }
