@@ -1,5 +1,5 @@
 import assert from 'assert';
-import {Array as ArrayT, Pointer, uint8, uint16, DecodeStream, EncodeStream} from 'restructure';
+import {Array as ArrayT, String as StringT, Pointer, uint8, uint16, uint32, DecodeStream, EncodeStream} from 'restructure';
 
 describe('Array', function() {
   describe('decode', function() {
@@ -61,6 +61,13 @@ describe('Array', function() {
       const buffer = new Uint8Array([1, 2, 3, 4]);
       const array = new ArrayT(uint8);
       assert.deepEqual(array.fromBuffer(buffer), [1, 2, 3, 4]);
+    });
+
+    it('should throw when the decoded length exceeds the stream', function() {
+      // 32-bit count of 100000 elements, but only one byte of payload follows.
+      const buffer = new Uint8Array([0x00, 0x01, 0x86, 0xa0, 0x00]);
+      const array = new ArrayT(new StringT(), uint32);
+      assert.throws(() => array.fromBuffer(buffer), /exceeds stream length/);
     });
   });
 
