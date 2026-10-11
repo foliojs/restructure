@@ -9,7 +9,7 @@ export class Struct extends Base {
 
   decode(stream, parent, length = 0) {
     const res = this._setup(stream, parent, length);
-    this._parseFields(stream, res, this.fields);
+    this._parseFields(stream, res, this.fields, parent);
 
     if (this.process != null) {
       this.process.call(res, stream);
@@ -31,12 +31,12 @@ export class Struct extends Base {
     return res;
   }
 
-  _parseFields(stream, res, fields) {
+  _parseFields(stream, res, fields, parent) {
     for (let key in fields) {
       var val;
       const type = fields[key];
       if (typeof type === 'function') {
-        val = type.call(res, res);
+        val = type.call(res, res, parent);
       } else {
         val = type.decode(stream, res);
       }
