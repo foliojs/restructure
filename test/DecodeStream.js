@@ -87,6 +87,20 @@ describe('DecodeStream', function() {
       assert.equal(stream.readString(buf.length, 'utf16be'), 'unicode! 👍');
     });
 
+    for (const [encoding, bytes] of [
+      ['utf8', [0xef, 0xbb, 0xbf, 0x41]],
+      ['utf16le', [0xff, 0xfe, 0x41, 0x00]],
+      ['ucs2', [0xff, 0xfe, 0x41, 0x00]],
+      ['utf16be', [0xfe, 0xff, 0x00, 0x41]]
+    ]) {
+      it(`should preserve leading U+FEFF in each ${encoding} string`, function() {
+        const stream = new DecodeStream(new Uint8Array([...bytes, ...bytes]));
+        assert.equal(stream.readString(bytes.length, encoding), '\uFEFFA');
+        assert.equal(stream.readString(bytes.length, encoding), '\uFEFFA');
+        assert.equal(stream.pos, bytes.length * 2);
+      });
+    }
+
     it('should decode macroman', function() {
       const buf = new Uint8Array([0x8a, 0x63, 0x63, 0x65, 0x6e, 0x74, 0x65, 0x64, 0x20, 0x63, 0x68, 0x87, 0x72, 0x61, 0x63, 0x74, 0x65, 0x72, 0x73]);
       const stream = new DecodeStream(buf);
