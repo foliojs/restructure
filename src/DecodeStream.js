@@ -18,7 +18,7 @@ export class DecodeStream {
 
     let buf = this.readBuffer(length);
     try {
-      let decoder = new TextDecoder(encoding);
+      let decoder = new TextDecoder(encoding, {ignoreBOM: true});
       return decoder.decode(buf);
     } catch (err) {
       return buf;

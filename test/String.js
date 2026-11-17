@@ -24,6 +24,16 @@ describe('String', function() {
       assert.equal(string.fromBuffer(Buffer.from('🍻')), '🍻');
     });
 
+    for (const encoding of ['utf8', 'utf16le', 'ucs2', 'utf16be']) {
+      it(`should round-trip leading U+FEFF in ${encoding} strings`, function() {
+        for (const length of [uint8, null]) {
+          const string = new StringT(length, encoding);
+          const value = '\uFEFFA\uFEFF';
+          assert.equal(string.fromBuffer(string.toBuffer(value)), value);
+        }
+      });
+    }
+
     it('should decode encoding computed from function', function() {
       const string = new StringT(4, function() { return 'utf8'; });
       assert.equal(string.fromBuffer(Buffer.from('🍻')), '🍻');
